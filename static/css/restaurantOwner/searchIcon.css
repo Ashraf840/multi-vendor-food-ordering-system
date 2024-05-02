@@ -1,0 +1,11 @@
+#searchIcon_holder {
+    background-color: rgb(226, 123, 123);
+    border-radius: 0 3px 3px 0; 
+    cursor: pointer;
+    transition: 0.1s ease-in-out;
+}
+
+
+#searchIcon_holder:hover {
+    background-color: rgb(209, 110, 110);
+}

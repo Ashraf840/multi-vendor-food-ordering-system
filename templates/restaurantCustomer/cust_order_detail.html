@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_customer.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <link rel="stylesheet" href="{% static 'css/restaurantCustomer/index_rest_slider.css' %}">
+
+
+    <!-- Progress Bar smooth transition -->
+    <style>
+        .progress-bar {
+            -webkit-transition: width 1.0s ease !important;
+            -moz-transition: width 1.0s ease !important;
+            -o-transition: width 1.0s ease !important;
+            transition: width 1.0s ease !important;
+        }
+    </style>
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <div class="row container-fluid">
+        <div class="col">
+            <a href="{% url 'restCustApp:rcust_homepage' %}" 
+                class="text-white" 
+                style="min-width: 7rem; text-decoration: none;">
+                <h3>
+                    Multi Vendor <br/>
+                    Food Recommendation System
+                </h3>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+
+    <div class="container-fluid pb-5 px-0"
+        style="background-color: rgb(255, 255, 255);">
+
+        <!-- Restaurant banner Image -->
+        <div class="row mx-3"
+            style="padding-top: 3rem;">
+            <div class="col text-center">
+                <h1> Restaurant Customer: Order Detail </h1>
+
+
+                <div class="row container-fluid d-flex justify-content-evenly"
+                    style="margin-top: 5rem;">
+                    <div class="col">
+                        {% if orderInstance.is_cancelled %}
+                            <a href="#"
+                                class="text-white btn btn-lg btn-secondary px-5 disabled"
+                                style="min-width: 7rem; text-decoration: none;">
+                                Order Cancelled
+                            </a>
+                        {% else %}
+                            <a href="{% url 'restCustApp:customerfoodOrderDetailCancel' orderInstance.order_id %}"
+                                class="text-white btn btn-lg btn-danger px-5 cancel_order_btn"
+                                style="min-width: 7rem; text-decoration: none;">
+                                Cancel Order
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="col">
+                        <!-- Paid/Unpaid Badge -->
+                        <span class="badge bg-secondary mt-1" 
+                            id="paidUnpaid"
+                            style="width: 20%;
+                                padding: 0.5rem 0;
+                                font-size: 1rem;">  </span>
+                    </div>
+                    <div class="col">
+                        <a href="{% url 'restCustApp:customerfoodOrderList' %}" 
+                            class="text-white btn btn-lg btn-dark px-5" 
+                            style="min-width: 7rem; text-decoration: none;">
+                            View Orders
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="row"
+                style="margin-top: 8rem;">
+                <div class="col">
+                    <h3 class="mb-3">Order Id - {{ orderInstance.order_id }}</h3>
+                    <span class="badge bg-primary mt-3" 
+                        id="status"
+                        style="width: 15%;
+                            padding: 0.5rem 0;
+                            font-size: 1rem;"> {{ orderInstance.status }} </span>
+                    <div class="progress my-4">
+                        <div class="progress-bar progress-bar-animated bg-dark" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+
+                    <div class="row"
+                        style="margin-top: 5rem;">
+                        <div class="col-2"></div>
+                        <div class="col">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Food</th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for fd in cartItemInstance %}
+                                        <tr>
+                                            <td> {{ fd.food }} </td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td></td>
+                                            <td> {{ fd.food.price }} </td>
+                                            <td> {{ fd.quantity }} </td>
+                                            <td> {{ fd.price }} </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+
+                    <hr>
+
+                    <div class="row"
+                        style="margin-top: 5rem;">
+                        <div class="col-1"></div>
+                        <div class="col">
+                            <table class="table table-borderless">
+                                <tbody>
+                                    <tr>
+                                        <td style="text-align: right;"
+                                            colspan="2"> <h3> <b>Total</b> </h3> </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="text-align: right;
+                                            font-weight: 700;"
+                                            colspan="2">Total Amount &nbsp;&nbsp; 
+                                            <small style="font-size: 0.7rem;"> BDT </small>
+                                            {{ orderInstance.price }} </td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+
+
+    <!-- Websocket Connection -->
+    <script>
+        // alert("Order Websocket")
+
+        var paidUnpaid = document.querySelector('#paidUnpaid');
+        // var cancel_order_modal_btn = document.querySelector("#cancel_order_modal_btn");
+        var cancel_order_modal_btn = document.querySelector(".cancel_order_btn");
+
+        // function alertTest(params) {
+        //     alert('Cancel btn is clicked!')
+        // }
+
+        // Create a websocket-connection with the backend consumer ("OrderProgress") in this page.
+        // Use websocketking.com for testing
+        var order_id = '{{ orderInstance.order_id }}';  // order_id is fetched from this page's ("cust_order_detail") django-variable
+
+        // websocket-url (built inside the "foodsystem/cartOrder/routing.py" file using the consumer ("OrderProgress") inside the "pizzaProj/home/consumers.py" file)
+        var url = 'ws://127.0.0.1:8080/ws/food-order/' + order_id + '/';
+        // "websocketking.com" url:   ws://127.0.0.1:8080/ws/pizza/<order_id>/
+
+        // Create a websocket-connection with the consumer ("OrderProgress") for this page
+        let socket = new WebSocket(url);
+
+        // Open the websocket connection for the frontend
+        socket.onopen = function (e) {
+            console.log('Frontend Websocket: Connection Established!');
+        }
+
+
+        // socket receiver: Backend --> Frontend
+        socket.onmessage = function (e) {
+            // console.log(e.data);
+            console.log(JSON.parse(e.data));    // grabs the json-resp-data sent from the backend-consumer-websocket
+            
+            // Initially, it'll bring the specific order-detail using the staticmethod ("get_order_detail") through the 'connect' method of the consumer ("OrderProgress"). But the 'connect' method only gets called once while this page gets loaded.
+            var data = JSON.parse(e.data);
+            var status = data.payload.status;
+            var progress = data.payload.progress;
+            var paid = data.payload.is_paid;
+            var cancelled = data.payload.is_cancelled;  // now used yet
+
+            // console.log(status);
+            // console.log(progress);
+
+            // REAL-TIME frontend-progressBar-maipulation from the backend
+            increaseProgress(status, progress, paid, cancelled);
+
+            // REAL-TIME frontend-cancelBtn-maipulation from the backend
+
+            // // // Working (disable "cancel_order" btn based on the order_cancel_boolean_field from the "Order" model)
+            // // if (order_cancel == false) {
+            // //     // console.log("False");
+            // //     cancel_order_modal_btn.classList.remove('disabled');
+            // // }else{
+            // //     // console.log("True");
+            // //     cancel_order_modal_btn.classList.add('disabled');
+            // // }
+
+            if (!paid) {
+                paidUnpaid.innerHTML = "Unpaid"
+                paidUnpaid.classList.remove('bg-success');
+                paidUnpaid.classList.add('bg-secondary');
+            } else {
+                paidUnpaid.innerHTML = "Paid"
+                paidUnpaid.classList.remove('bg-secondary');
+                paidUnpaid.classList.add('bg-success');
+            }
+
+            console.log("Progress: ", progress);
+            console.log("Progress (Type): ", typeof(progress));
+            
+            // // checkOrderCancelAbility()
+            if (progress > 20) {
+                cancel_order_modal_btn.classList.add('disabled');
+                cancel_order_modal_btn.classList.remove('btn-danger');
+                cancel_order_modal_btn.classList.add('btn-secondary');
+            } else {
+                cancel_order_modal_btn.classList.remove('disabled');
+                cancel_order_modal_btn.classList.remove('btn-secondary');
+                cancel_order_modal_btn.classList.add('btn-danger');
+            }
+
+
+
+            // function orderCancelCheck() {
+            //     // check if the order is cancelled by the user
+            //     if (cancelled) {
+            //         cancel_order_modal_btn.innerHTML = 'Cancel Order';
+            //         cancel_order_modal_btn.classList.add('disabled');
+            //         cancel_order_modal_btn.classList.remove('bg-danger');
+            //         cancel_order_modal_btn.classList.add('bg-secondary');
+            //     } else {
+            //         cancel_order_modal_btn.innerHTML = 'Cancel Order';
+            //         cancel_order_modal_btn.classList.remove('disabled');
+            //         cancel_order_modal_btn.classList.remove('bg-secondary');
+            //         cancel_order_modal_btn.classList.add('bg-danger');
+            //     }
+            // }
+
+        }
+        
+
+        socket.onclose = function (e) {
+            console.log('Frontend Websocket: Connection Closed!');
+        }
+
+
+
+        // Increase progress & modify status
+        function increaseProgress(statusParam, progressParam, paidParam, cancelledParam) {
+            // fetch these two DOM-elems and make them responsive using using channels/ websockets
+            var status_html = document.querySelector('#status');
+            var progressBar_html = document.querySelector('.progress-bar');
+
+            console.log(statusParam);
+            console.log(progressParam);
+
+            // "statusParam" & "progressParam" is getting real-time value from the websocket-connections
+
+            status_html.innerHTML = statusParam;    // manipulating DOM-elem
+
+            // console.log(progressBar_html);
+            progressBar_html.style.width = progressParam + "%";     // manipulating DOM-elem
+            // console.log(progressBar_html);
+
+
+            if (progressParam == 100) {
+                status_html.classList.remove('bg-primary');
+                progressBar_html.classList.remove('bg-primary');
+
+                status_html.classList.add('bg-success');
+                progressBar_html.classList.add('bg-success');
+            }else{
+                status_html.classList.remove('bg-success');
+                progressBar_html.classList.remove('bg-success');
+
+                status_html.classList.add('bg-primary');
+                progressBar_html.classList.add('bg-primary');
+            }
+        }
+
+    </script>
+
+
+
+{% endblock %}

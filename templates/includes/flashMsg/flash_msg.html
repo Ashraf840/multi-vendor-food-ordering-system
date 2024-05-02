@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+
+{% for msg in messages %}
+<div id="errorDiv">
+    <div class="row m-0 p-0">
+        <div class="col-1" id="outer-holder">
+            <div class="outer" id="outer">
+                <div class="inner">
+                <label>Close</label>
+            </div>
+            </div>
+        </div>
+        <div class="col d-flex flex-row">
+            <p>{{ msg }}</p>
+        </div>
+    </div>
+</div>
+{% endfor %}

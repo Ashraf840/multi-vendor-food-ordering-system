@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<!-- Using/ extending the "foodsystem/templates/base_restaurant_owner.html" file as a base-template -->
+
+<!-- Views: "foodsystem\restaurantOwner\views\food_order_views\order_CRUD_views.py" -->
+
+{% extends 'base_restaurant_owner.html' %}
+{% load static %}
+
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <link rel="stylesheet" href="{% static 'css/restaurantOwner/searchIcon.css' %}">
+{% endblock %}
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <a href="{% url 'restOwnerApp:rowner_homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+        <h3>
+            Multi Vendor <br/>
+            Food Recommendation System
+        </h3>
+    </a>
+{% endblock %}
+
+
+
+
+{% block content %}
+
+    <div class="container">
+
+        <div class="row d-flex justify-content-between">
+            <div class="col-7 py-3">
+                <h3>Order Status Update: Restaurant Owner</h3>
+            </div>
+            <div class="col-2 py-3 d-flex justify-content-end">
+                <a href="{% url 'restOwnerApp:food_order_list' %}" class="text-white btn btn-lg btn-dark" 
+                    style="min-width: 7rem; text-decoration: none;">
+                    View Order List
+                </a>
+            </div>
+        </div>
+
+        <div class="container mb-5 pt-5 py-5">
+            <div class="row d-flex justify-content-between">
+                <div class="col align-items-center">
+                    <!-- Order Detail Card -->
+                    <div class="card shadow border pb-2" 
+                        style="width: 100%; margin-left: -1rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">Order Id: {{ order.order_id }}</h5>
+                            <div class="row mt-5">
+                                <div class="col">
+                                    <p class="card-text">Username: {{ user_full_name }}</p>
+                                    <p class="card-text">Price: {{ order.price }}</p>
+                                    <p class="card-text">Paid: {{ order.is_paid }}</p>
+                                    <p class="card-text">Status: {{ order.status }}</p>
+                                    <p class="card-text">Payment Method: {{ order.payment_method }}</p>
+                                    <p class="card-text">Delivery Time: {{ order.delivery_time }}</p>
+                                </div>
+                                <div class="col d-flex flex-row-reverse">
+                                    <div class="row">
+                                        <div class="col">
+                                            <!-- <span id="order_status_badge"
+                                                class="badge bg-danger m-0 py-2 fs-4">
+                                                Order Cancelled
+                                            </span> -->
+                                            {% if order.is_paid %}
+                                                <span class="badge bg-success m-0 py-2 fs-4 order_status_badge">
+                                                    Paid
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-secondary m-0 py-2 fs-4 order_status_badge">
+                                                    Not Paid
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col d-flex align-items-center">
+                    <form method="POST" 
+                        class="p-5 container bg-light border border-warning rounded">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col mx-0 my-5">
+                                <label class="fs-3"> 
+                                    Change Order Status:
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row m-0 p-0">
+                            <div class="col fs-4 m-0 p-0 d-flex align-items-center">
+                                {{ orderForm.status }}
+                            </div>
+                        </div>
+                        <div class="row mt-5">
+                            <div class="col d-flex justify-content-end">
+                                <button type="submit"
+                                    id="order_status_change_btn"
+                                    class="btn btn-primary">Apply Change</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+            
+            {% if order.status == 'Out for Delivery' or order.status == 'Order Received by Customer' %}
+                <div class="row"
+                    style="margin-top: 5rem;">
+                    <div class="col-4"></div>
+                    <div class="col text-center">
+                        <!-- Views: "foodsystem\restaurantOwner\views\food_order_views\order_CRUD_views.py" -->
+                        <form action="{% url 'restOwnerApp:restaurant_order_paidUnpaid_update' order.order_id %}" 
+                            method="POST">
+                            {% csrf_token %}
+                            <button type="submit"
+                                class="btn btn-lg btn-success paidBtn"
+                                style="width: 12rem;
+                                    font-size: 2.5rem;">Paid</button>
+                        </form>
+                    </div>
+                    <div class="col-4"></div>
+                </div>
+            {% endif %}
+                
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+
+<!-- Custom JS -->
+{% block js %}
+
+    <!-- Websocket Script -->
+    <script>
+        // alert('hellow')
+
+        // Using the same consumer ("OrderProgress"), bcz it also receives the the boolean-field value of "order_cancel" field from the "Order" model.
+        // Create a websocket-connection with the backend consumer ("OrderProgress") in this page.
+        // Use websocketking.com for testing
+        var order_id = '{{ order.order_id }}';  // order_id is fetched from this page's ("order.html") django-variable
+
+        // websocket-url (built inside the "foodsystem/cartOrder/routing.py" file using the consumer ("OrderProgress") inside the "pizzaProj/home/consumers.py" file)
+        var url = 'ws://127.0.0.1:8080/ws/food-order/' + order_id + '/';
+        // "websocketking.com" url:   ws://127.0.0.1:8080/ws/pizza/<order_id>/
+        
+        // Create a websocket-connection with the consumer ("OrderProgress") for this page
+        let socket = new WebSocket(url);
+
+        // Open the websocket connection for the frontend
+        socket.onopen = function (e) {
+            console.log('Frontend Websocket: Connection Established!');
+        }
+
+        // socket receiver: Backend --> Frontend
+        socket.onmessage = function (e) {
+            // console.log(e.data);
+            console.log(JSON.parse(e.data));    // grabs the json-resp-data sent from the backend-consumer-websocket
+            
+            // Initially, it'll bring the specific order-detail using the staticmethod ("get_order_detail") through the 'connect' method of the consumer ("OrderProgress"). But the 'connect' method only gets called once while this page gets loaded.
+            var data = JSON.parse(e.data);
+            var order_cancel = data.payload.is_cancelled;
+            var order_paid = data.payload.is_paid;
+
+            // REAL-TIME frontend-(order_status_change_btn, order_status_badge)-maipulation from the backend
+            var order_status_change_btn = document.querySelector('#order_status_change_btn');
+            var order_status_badge = document.querySelector('.order_status_badge');
+            var paidBtn = document.querySelector('.paidBtn');
+            
+            // Working (disable "cancel_order" btn based on the order_cancel_boolean_field from the "Order" model)
+            if (order_cancel == false) {
+                // console.log("False");
+                order_status_change_btn.classList.remove('disabled');
+
+                if (!order_paid) {
+                    order_status_badge.innerHTML = 'Not Paid';
+                    order_status_badge.classList.remove('bg-success');
+                    order_status_badge.classList.add('bg-secondary');
+                    order_status_change_btn.classList.remove('disabled');
+                    // Enable the paid btn
+                    paidBtn.classList.remove('disabled');
+                } else {
+                    order_status_badge.innerHTML = 'Paid';
+                    order_status_badge.classList.remove('bg-secondary');
+                    order_status_badge.classList.add('bg-success');
+                    order_status_change_btn.classList.add('disabled');
+                    // Disable the paid btn
+                    paidBtn.classList.add('disabled');
+                }
+            }else{
+                // console.log("True");
+                order_status_change_btn.classList.add('disabled');
+                order_status_badge.innerHTML = 'Order Cancelled';
+            }
+        }
+
+        socket.onclose = function (e) {
+            console.log('Frontend Websocket: Connection Closed!');
+        }
+    </script>
+
+{% endblock %}

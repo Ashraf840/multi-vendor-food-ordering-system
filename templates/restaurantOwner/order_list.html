@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<!-- Using/ extending the "foodsystem/templates/base_restaurant_owner.html" file as a base-template -->
+
+
+
+{% extends 'base_restaurant_owner.html' %}
+{% load static %}
+
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <link rel="stylesheet" href="{% static 'css/restaurantOwner/searchIcon.css' %}">
+{% endblock %}
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <a href="{% url 'restOwnerApp:rowner_homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+        <h3>
+            Multi Vendor <br/>
+            Food Recommendation System
+        </h3>
+    </a>
+{% endblock %}
+
+
+
+<!-- Dedicated Searchfield Template Tags (Restaurant Owner) -->
+{% block search %} 
+    <div class="row container-fluid px-0 m-auto">
+        <div class="col-2"></div>
+        <div class="col px-0">
+            <input class="form-control form-control-dark w-100" 
+                    id="searchField" 
+                    type="text" 
+                    placeholder="Search" 
+                    aria-label="Search"
+                    style="
+                        /* border: 3px solid red; */
+                        border-radius: 3px 0 0 3px;
+                    ">
+        </div>
+        <div class="col-1 d-flex align-items-center justify-content-center"
+            id="searchIcon_holder">
+            <img src="{% static 'app_recources/search_icon.png' %}" 
+                alt="Search Icon" width="18" height="18">
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %}
+    <div class="container-fluid pb-5 px-0"
+        style="background-color: rgba(255, 255, 255, 0.76);">
+
+        <!-- Restaurant banner Image -->
+        <div class="row mx-3"
+            style="margin-top: 5rem;">
+            <div class="col text-center">
+                
+                <!-- Order List Table -->
+                <table class="table table-hover table-striped"
+                    style="margin: 5rem 0 5rem 0;">
+                    <h1>Order List: Restaurant Owner</h1>
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Order Number</th>
+                            <th scope="col">Payment</th>
+                            <th scope="col">Date Purchased</th>
+                            <th scope="col">Paid</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Cancelled</th>
+                            <th scope="col">Price</th>
+                            <th scope="col" 
+                                class="text-center">View Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in restOrder %}
+                            {% if o.is_cancelled %}
+                                <tr style="background-color: rgba(255, 130, 130, 0.301);">
+                            {% else %}
+                                <tr>
+                            {% endif %}
+                                    <th scope="row"
+                                        class="py-4">#{{ forloop.counter }}</th>
+                                    <td class="py-4">{{ o.customer.first_name }} {{ o.customer.last_name }}</td>
+                                    <td class="py-4">{{ o.order_num }}</td>
+                                    <td class="py-4">{{ o.payment_method }}</td>
+                                    <td class="py-4">{{ o.delivery_time }}</td>
+                                    {% if o.is_paid %}
+                                        <td class="fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Paid</td>
+                                    {% else %}
+                                        <td class="fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Not Paid</td>
+                                    {% endif %}
+                                    <td style="padding: 1.2rem 0 1.2rem 0.5rem;">
+                                        <span class="badge bg-info m-0 py-2 fs-6 statusCol" id="statusCol_{{o.order_id}}">
+                                            {{ o.status }}
+                                        </span>
+                                    </td>
+                                    {% if o.is_cancelled %}
+                                        <td class="text-danger fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Cancelled</td>
+                                    {% else %}
+                                        <td class="fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Ordered</td>
+                                    {% endif %}
+                                    <td class="py-4">{{ o.price }}</td>
+                                    <td class="text-center"
+                                        style="padding: 1.3rem 0;">
+                                        <a href="{% url 'restOwnerApp:restaurant_order_status_update' o.order_id %}"
+                                            class="btn btn-primary btn-sm px-4">
+                                            View Detail
+                                        </a>
+                                    </td>
+                                </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10" class="text-center">
+                                Total Orders: <b> {{ total_order_num }} </b>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_customer.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+
+    <style>
+        .hr {
+            width: 100%;
+            height: 2px;
+            color: rgb(0, 0, 0);
+        }
+
+        #foodCartItemRemoveBtn,
+        #fciRemoveBtn {
+            transition: all 0.1s ease-in-out;
+        }
+
+        #foodCartItemRemoveBtn:hover {
+            background-color: rgb(66, 66, 66);
+        }
+
+        #fciRemoveBtn {
+            color: rgb(82, 82, 82);
+        }
+
+        #foodCartItemRemoveBtn:hover #fciRemoveBtn {
+            color: rgb(255, 91, 91);
+        }
+    </style>
+
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <div class="row container-fluid">
+        <div class="col">
+            <a href="{% url 'restCustApp:rcust_homepage' %}" 
+                class="text-white" 
+                style="min-width: 7rem; text-decoration: none;">
+                <h3>
+                    Multi Vendor <br/>
+                    Food Recommendation System
+                </h3>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+<!-- Food Cart Icon -->
+{% block cart %} 
+
+    <a href="{% url 'restCustApp:foodCart' cartID %}"
+        class="text-white text-decoration-none d-flex justify-content-center align-items-center" 
+        style="height: 5rem;
+        width: 5rem;">
+        <i class="fas fa-shopping-cart fa-2x"></i>
+    </a>
+
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+
+
+    <div class="row m-5">
+        <div class="col"
+            style="background-color: rgba(223, 223, 223, 0.479);">
+
+            <div class="row">
+                <div class="col text-center mb-5">
+                    <h1>My Cart</h1>
+                </div>
+            </div>
+            <!-- <br>
+            <p> Cart ID: {{ cartID }} </p>
+            <p> Restaurant ID: {{ restaurant.restaurant_name }} </p>
+            <p> Customer: {{ cart }} </p>
+            <br/> -->
+
+
+            <div class="row my-4">
+                <div class="col-2"></div>
+                <div class="col text-center">
+                    <h1>
+                        <a href="{% url 'restCustApp:rest_page_cust_view' restaurant.id  %}"
+                            class="btn btn-lg btn-dark"
+                            style="width: 15rem;
+                                height: 4.3rem;
+                                font-size: 2rem;">Add Food +</a>
+                    </h1>
+                </div>
+                <div class="col-2"></div>
+            </div>
+
+            <table class="table">
+                <tbody>
+                    {% for cItems in cartItems %}
+                    <tr>
+                        <td>
+                            <div class="row"
+                                style="background-color: azure;">
+                                <div class="col-3 d-flex justify-content-center align-items-center">
+                                    <!-- Food Image -->
+                                    <!-- <img src="{% static 'app_recources/testImg.jpg' %}" 
+                                        class="card-img-top" 
+                                        alt="food-image"
+                                        style="width:100%;
+                                            height:100%"> -->
+                                    
+                                    <img src="{{ cItems.food.image.url }}" 
+                                        class="card-img-top" 
+                                        alt="food-image"
+                                        style="width:100%;
+                                            height:100%">
+                                </div>
+                                <div class="col d-flex align-items-center">
+                                    <div class="row container-fluid">
+                                        <div class="col">
+                                            <div class="row"
+                                                style="margin: 5rem 0;">
+                                                <div class="col">
+                                                    <h2> {{ cItems.food.food_name }} </h2>
+                                                    <h4> {{ cItems.food.category }} </h4>
+
+                                                    <h5> Quantity: {{ cItems.quantity }} </h5>
+
+                                                    <!-- <small> {{ cItems.cart_id }} </small>
+                                                    <br/>
+                                                    <small> {{ cItems.cartItem_id }} </small> -->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-2">
+                                            <a href="{% url 'restCustApp:foodCartItemRemove' cItems.cartItem_id %}">
+                                                <div class="row px-0"
+                                                    id="foodCartItemRemoveBtn"
+                                                    style="width: 13.8rem;
+                                                        height: 17.2rem;">
+                                                    <div class="col d-flex justify-content-center align-items-center">
+                                                        <i class="fas fa-times fa-3x"
+                                                            id="fciRemoveBtn"></i>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <br/>
+                                    <!-- {{ cItems.cart_id }} ------ {{ cItems.food }} ------ {{ cItems.quantity }} ------ {{ cItems.price }} -->
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+        </div>
+
+
+
+        <div class="col-2 ms-4"
+            style="background-color: rgba(223, 223, 223, 0.479);">
+
+            <div>
+                <h2> <b>Your Order</b> </h2>
+                <!-- -------------------------- -->
+                <hr class="hr" />
+                <br/>
+                <!-- pass other information using hidden inputs -->
+                <p>Subtotal: Tk. {{ cartTotalPrice }} </p>
+                <p>Delivery Fee: Tk. {{ deliveryCharge }} </p>
+                <p>VAT: Tk. {{ totalVAT }} </p>
+                <p class="fw-bold">Total Price: Tk. {{ cartPriceDeliveryChargeVAT }} </p>
+                <br/>
+                <a href="{% url 'restCustApp:customerOrder' cartID %}"
+                    class="btn btn-dark">Proceed to Checkout</a>
+                <hr class="hr" />
+                <!-- -------------------------- -->
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+
+    <!-- Custom JS for changing food quantity -->
+    <!-- <script src="{% static 'js/restaurantCustomer/quantity_scale.js' %}"></script> -->
+    
+    <!-- Axios CDN -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+    <!-- Create order-record using axios-post-method -->
+    <!-- <script src="{% static 'js/restaurantCustomer/restaurant_page_cust_view_api.js' %}"></script> -->
+    
+{% endblock %}

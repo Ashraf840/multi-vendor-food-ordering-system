@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<!-- Using/ extending the "foodsystem/templates/base_restaurant_owner.html" file as a base-template -->
+
+
+{% extends 'base_restaurant_owner.html' %}
+{% load static %}
+
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+<link rel="stylesheet" href="{% static 'css/restaurantOwner/searchIcon.css' %}">
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <a href="{% url 'restOwnerApp:rowner_homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+        <h3>
+            Multi Vendor <br/>
+            Food Recommendation System
+        </h3>
+    </a>
+{% endblock %}
+
+
+
+
+
+<!-- Dedicated Searchfield Template Tags (Restaurant Owner) -->
+<!-- Search functionality is inside the "foodsystem/static/js/restaurantOwner/staff_management_views/searchStaff.js" file -->
+{% block search %} 
+    <!-- <div class="row container-fluid px-0 m-auto">
+        <div class="col-2"></div>
+        <div class="col px-0">
+            <input class="form-control form-control-dark w-100" 
+                    id="searchField" 
+                    type="text" 
+                    placeholder="Search" 
+                    aria-label="Search"
+                    style="
+                        /* border: 3px solid red; */
+                        border-radius: 3px 0 0 3px;
+                    ">
+        </div>
+        <div class="col-1 d-flex align-items-center justify-content-center"
+            id="searchIcon_holder">
+            <img src="{% static 'app_recources/search_icon.png' %}" 
+                id="searchIcon" alt="Search Icon" 
+                width="18" height="18">
+        </div>
+    </div> -->
+{% endblock %}
+
+
+
+
+
+
+
+
+<!-- Main Body Content -->
+{% block content %}
+    <div class="container p-5 bg-warning">
+        <h1>Restaurant Staff List <span class="text-danger">(Pending)</span></h1>
+
+
+
+        <div id="tableDefualt">
+            <table class="table table-striped table-hover mt-5">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th>Staff Name</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Active</th>
+                        <th>Approval</th>
+                        <th>Remove (Delete Staff)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for rs in rest_staffs %}
+                    <tr>
+                        <th scope="row"> {{forloop.counter }}  </th>
+                        <td> {{ rs }} </td>
+                        <td> {{ rs.phone }} </td>
+                        <td> {{ rs.email }} </td>
+                        <td> {{ rs.gender }} </td>
+                        <td> {{ rs.is_active }} </td>
+                        <td>
+                            <div class="col">
+                                <span>
+                                    <a href="{% url 'restaurantOwnerApplication:rowner_staff_approval' rs.pk %}" 
+                                        onclick="return confirm('Approve as restaurant staff?')"
+                                        class="btn btn-sm"
+                                        style="color: rgb(0, 0, 0); 
+                                            background-color: rgb(195, 255, 126);">Approve {{ rs.pk  }}</a>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col">
+                                <span>
+                                    <a href="{% url 'restaurantOwnerApplication:rowner_staff_delete' rs.pk %}" 
+                                        onclick="return confirm('Remove the restaurant staff?')"
+                                        class="btn btn-sm"
+                                        style="color: rgb(0, 0, 0); 
+                                            background-color: rgb(255, 167, 126);">Remove {{ rs.pk  }}</a>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+
+        <div id="tableSearchOutput"
+            style="display: none">
+            <table class="table table-striped table-hover mt-5">
+                <thead class="bg-dark text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th>Staff Name</th>
+                        <th>Contact</th>
+                        <th>Email</th>
+                        <th>Gender</th>
+                        <th>Approve</th>
+                    </tr>
+                </thead>
+                <tbody id="tableSearchOutputBody">
+                    <!-- Staff Data row will be populated here dynamically after getting searched  -->
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+    <!-- Search Functionality (Axios Used) -->
+    <!-- <script src="{% static 'js/restaurantOwner/staff_management_views/searchStaff_api.js' %}"></script> -->
+{% endblock %}
+

@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_customer.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+
+    <link rel="stylesheet" href="{% static 'css/food/food_detail_cust_views.css' %}">
+
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <div class="row container-fluid">
+        <div class="col">
+            <a href="{% url 'restCustApp:rcust_homepage' %}" 
+                class="text-white" 
+                style="min-width: 7rem; text-decoration: none;">
+                <h3>
+                    Multi Vendor <br/>
+                    Food Recommendation System
+                </h3>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Food Cart Icon -->
+{% block cart %} 
+
+    {% if custCart %}
+    <a href="{% url 'restCustApp:foodCart' custCart %}"
+        class="text-white text-decoration-none d-flex justify-content-center align-items-center" 
+        style="height: 5rem;
+        width: 5rem;">
+
+        <i class="fas fa-shopping-cart fa-2x"></i>
+    </a>
+    <!-- [ FURTHER DEVELOPMENT ]: Create another cart page displaying an empty cart page & will be in the else-block -->
+    {% else %}
+    <!-- [ Notes ]: The page will not initally get the cart-id, so manually realod the page at the first time of generating the cart-id. -->
+    <script> window.location.reload(); </script>
+    {% endif %}
+
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+
+
+    <div class="row mx-5"
+        style="margin-top: 2rem;">
+
+        <div class="col-2">
+            <h3> Restaurant &nbsp; </h3>
+            <div class="row">
+                <div class="col-6"> <hr/> </div>
+            </div>
+            <a href="{% url 'restCustApp:rest_page_cust_view' foodInstance.created_by.pk  %}"
+                style="text-decoration: none;
+                    color: black;
+                    cursor: pointer;">
+                <h1> <b> {{ foodInstance.created_by.restaurant_name }} </b> </h1>
+            </a>
+
+
+            <h3 style="margin-top: 8rem"> Food &nbsp; </h3>
+            <div class="row">
+                <div class="col-6"> <hr/> </div>
+            </div>
+            <h3> <b> {{ foodInstance.food_name }} </b> </h3>
+            <h4 class="mt-4"> <b> Tk. {{ foodInstance.price }} </b> </h4>
+
+            <h3 style="margin-top: 8rem"> Category &nbsp; </h3>
+            <div class="row">
+                <div class="col-6"> <hr/> </div>
+            </div>
+            <h3> <b> {{ foodInstance.category }} </b> </h3>
+
+            <h3 style="margin-top: 8rem"> Love this food? &nbsp; </h3>
+            <div class="row">
+                <div class="col-6"> <hr/> </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <!-- If food-like-instance exists, then assign the food-like, otherwise reload the page, while reloading the food-like instace will be created, then display the fodd-detail-page -->
+                    {% if foodLieksInstance %}
+                        {% if foodLieksInstance.is_liked %}
+                            <a href="{% url 'foodApp:foodUnliked' foodInstance.pk custCart %}">
+                                <i class="fas fa-heart fa-2x"
+                                    id="fa-heart-liked"></i>
+                            </a>
+                        {% else %}
+                            <a href="{% url 'foodApp:foodLiked' foodInstance.pk custCart %}">
+                                <i class="fas fa-heart fa-2x"
+                                    id="fa-heart-unliked"></i>
+                            </a>
+                        {% endif %}
+                    {% else %}
+                        <script> window.location.reload(); </script>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+
+        <div class="col-6 text-center">
+            <!-- <h1> Food Detail Page </h1> -->
+            <img src="{{ foodInstance.image.url }}" 
+                id="foodImg"
+                alt="Avatar"
+                style="z-index: -10;
+                    width: 35rem;
+                    height: 35rem;
+                    margin: 5rem 0 5rem 3rem"> 
+            
+            <div class="row">
+                <div class="col">
+                    <form action="{% url 'restCustApp:addToCart' %}"
+                        method="POST">
+                        {% csrf_token %}
+                        <input type="text" name="cart" value="{{ custCart }}" hidden>
+                        <input type="text" name="food" value="{{ foodInstance.food_name }}" hidden>
+                        <input type="range" 
+                            name="quantity"
+                            min="0" 
+                            max="10" 
+                            value="1"
+                            id="quantitySlider"
+                            class="slider"
+                            onchange="updateQuantityNum(this.value);">
+                        <h5 id="quantityIndicatorNum">Quantity: 
+                            <span id="quantityNum"> 1 </span> 
+                        </h5>
+                        <button type="submit" 
+                            class="btn btn-dark mb-5"
+                            id="food_tag_add_btn">Add to cart +</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col">
+            
+            
+            <!-- Food Average Rating Display Div -->
+            <div class="food-rating">
+                <div class="row py-4 px-0" id="food-avg-rating">
+                    <div class="col text-center">
+                        <h3>Avg. Rating</h3>
+                        <h2 class="d-flex justify-content-center fw-bolder"> 
+                            {{ avgRating }} / 5
+                        </h2>
+    
+                        <div class="row mt-4">
+                            <div class="col">
+                                <!-- Rating-1 Progress Bar Div -->
+                                <div class="row">
+                                    <div class="col-2 d-flex align-item-center justify-content-end">
+                                        <h4 style="margin: auto 0;">
+                                            1 &nbsp; <span class="fas fa-star checked"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="col"
+                                        style="padding: .7rem .5rem;
+                                            margin-left: 1rem;">
+                                        <div class="progress" style="margin: .2rem 0;">
+                                            <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_1 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 d-flex justify-content-center px-0">
+                                        <div class="container-fluid px-0 div-each-counter fw-bold"
+                                            style="margin: auto 0;">
+                                            {{ rating_1_counter }} 
+                                        </div> 
+                                    </div>
+                                </div>
+    
+                                <!-- Rating-2 Progress Bar Div -->
+                                <div class="row">
+                                    <div class="col-2 d-flex align-item-center justify-content-end">
+                                        <h4 style="margin: auto 0;">
+                                            2 &nbsp; <span class="fas fa-star checked"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="col"
+                                        style="padding: .7rem .5rem;">
+                                        <div class="progress" 
+                                            style="margin: .2rem 0;
+                                                margin-left: 1rem">
+                                            <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_2 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 d-flex justify-content-center px-0">
+                                        <div class="container-fluid px-0 div-each-counter fw-bold"
+                                            style="margin: auto 0;">
+                                            {{ rating_2_counter }} 
+                                        </div> 
+                                    </div>
+                                </div>
+    
+                                <!-- Rating-3 Progress Bar Div -->
+                                <div class="row">
+                                    <div class="col-2 d-flex align-item-center justify-content-end">
+                                        <h4 style="margin: auto 0;">
+                                            3 &nbsp; <span class="fas fa-star checked"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="col"
+                                        style="padding: .7rem .5rem;">
+                                        <div class="progress" 
+                                            style="margin: .2rem 0;
+                                                margin-left: 1rem">
+                                            <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_3 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 d-flex justify-content-center px-0">
+                                        <div class="container-fluid px-0 div-each-counter fw-bold"
+                                            style="margin: auto 0;">
+                                            {{ rating_3_counter }} 
+                                        </div> 
+                                    </div>
+                                </div>
+    
+                                <!-- Rating-4 Progress Bar Div -->
+                                <div class="row">
+                                    <div class="col-2 d-flex align-item-center justify-content-end">
+                                        <h4 style="margin: auto 0;">
+                                            4 &nbsp; <span class="fas fa-star checked"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="col"
+                                        style="padding: .7rem .5rem;">
+                                        <div class="progress" 
+                                            style="margin: .2rem 0;
+                                                margin-left: 1rem">
+                                            <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_4 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 d-flex justify-content-center px-0">
+                                        <div class="container-fluid px-0 div-each-counter fw-bold"
+                                            style="margin: auto 0;">
+                                            {{ rating_4_counter }} 
+                                        </div> 
+                                    </div>
+                                </div>
+    
+                                <!-- Rating-5 Progress Bar Div -->
+                                <div class="row">
+                                    <div class="col-2 d-flex align-item-center justify-content-end">
+                                        <h4 style="margin: auto 0;">
+                                            5 &nbsp; <span class="fas fa-star checked"></span>
+                                        </h4>
+                                    </div>
+                                    <div class="col"
+                                        style="padding: .7rem .5rem;">
+                                        <div class="progress" 
+                                            style="margin: .2rem 0;
+                                                margin-left: 1rem">
+                                            <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_5 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2 d-flex justify-content-center px-0">
+                                        <div class="container-fluid px-0 div-each-counter fw-bold"
+                                            style="margin: auto 0;">
+                                            {{ rating_5_counter }} 
+                                        </div> 
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row"
+                style="margin-top: 2rem">
+                <div class="col-1"></div>
+                <div class="col-10"> <hr class="foodRatingHR"> </div>
+                <div class="col-1"></div>
+            </div>
+
+
+            <!-- Customer Rating Form -->
+            <div class="row mt-3">
+                <div class="col">
+                    <div class="row">
+                        <div class="col d-flex justify-content-center">
+                            <h3> Your Rating </h3>
+                        </div>
+                    </div>
+                    
+                    <!-- ------------------------ -->
+                    <div class="row">
+                        <div class="col d-flex justify-content-center"
+                            style="margin-left: 0rem;">
+                            {% if custFoodRatingInstance.rating == 5 %}
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>                                
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            {% endif %}
+                            {% if custFoodRatingInstance.rating == 4 %}
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>                                
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            {% endif %}
+                            {% if custFoodRatingInstance.rating == 3 %}
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            {% endif %}
+                            {% if custFoodRatingInstance.rating == 2 %}
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            {% endif %}
+                            {% if custFoodRatingInstance.rating == 1 %}
+                            <span class="fas fa-star fa-3x ratingStart5"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>                                
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            {% endif %}
+                            {% if custFoodRatingInstance.rating == 0 %}
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>                                
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            <span class="fas fa-star fa-3x ratingStart5"
+                                style="color: rgb(207, 207, 207);"></span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                    <div class="row"
+                        style="margin-top: 3rem;">
+                        <div class="col">
+                            <form action="{% url 'foodApp:updateFoodRating' foodInstance.pk custCart %}" 
+                                method="POST"
+                                class="px-5 py-2"
+                                style="border: 0.01rem solid rgba(255, 255, 255, 0.233);
+                                    border-radius: 0.5rem;
+                                    background: rgb(224, 224, 224);">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="col-8 d-flex align-item-center justify-content-center">
+                                        <!-- Customized Slider -->
+                                        <!-- Ref:  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_rangeslider_pic -->
+                                        <input type="range" 
+                                            name="foodRatingSlider"
+                                            min="0" 
+                                            max="5"
+                                            value="{{ custFoodRatingInstance.rating }}"
+                                            class="slider"
+                                            onchange="updateRatingNum(this.value);"
+                                            style="margin-top: 1rem;">
+                                    </div>
+                                    <div class="col">
+                                        <h5 id="ratingNum"> {{ custFoodRatingInstance.rating }} </h5>
+                                    </div>
+                                    <div class="col d-flex align-item-center justify-content-start">
+                                        <button type="submit"
+                                            class="btn btn-dark">Confirm</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- ------------------------ -->
+                </div>
+            </div>
+
+
+            <div class="row"
+                style="margin-top: 2rem">
+                <div class="col-1"></div>
+                <div class="col-10"> <hr class="foodRatingHR"> </div>
+                <div class="col-1"></div>
+            </div>
+
+            <!-- Food Total Views Div -->
+            <div class="food-view mt-5">
+                <div class="row p-4" id="food-total-views">
+                    <div class="col text-center">
+                        <h1>Total Views</h1>
+                        <h2 class="d-flex justify-content-center fw-bolder"> 
+                            <span class="me-3"> 
+                                <i class="fas fa-eye"></i> 
+                            </span>
+                            {{ foodInstance.total_viewed }} </h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+{% block js %}
+
+    <script>
+        function updateQuantityNum(val) {
+            document.getElementById("quantityNum").innerHTML = val;
+        }
+
+        function updateRatingNum(val) {
+            document.getElementById("ratingNum").innerHTML = val;
+        }
+    </script>
+
+{% endblock %}
+

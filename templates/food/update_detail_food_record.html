@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+
+
+<!-- Using/ extending the "foodsystem/templates/base_restaurant_owner.html" file as a base-template -->
+
+
+
+{% extends 'base_restaurant_owner.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <!-- Page Styling -->
+    <link rel="stylesheet" href="{% static 'css/food/update_detail_food_record.css' %}">
+
+    <!-- Error Flash Message Styling -->
+    <link rel="stylesheet" href="{% static 'css/includes/flashMsg/flash_msg.css' %}">
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <a href="{% url 'restOwnerApp:rowner_homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+        <h3>
+            Multi Vendor <br/>
+            Food Recommendation System
+        </h3>
+    </a>
+{% endblock %}
+
+
+
+
+
+
+<!-- Main Body Content -->
+{% block content %}
+    <div class="container-fluid">
+        <div class="row py-5">
+            <div class="col"></div>
+            <div class="col">
+                <h1 style="font-size: 3rem; margin: .5rem 0;">RO: Food Detail</h1>
+            </div>
+            <div class="col text-end">
+                <a href="{% url 'foodApp:food_foodList' %}" class="text-white btn btn-lg btn-dark" 
+                    style="min-width: 7rem; text-decoration: none; margin: 1rem 1.5rem;">
+                    View Food List
+                </a>
+            </div>
+        </div>
+
+        <div class="row px-1">
+            <div class="col">
+                <!-- Food Image Div -->
+                <div class="row food-img px-3 py-5 d-block justify-content-center align-item-center"
+                    id="food-image-tumbnail-btn-holder">
+                    <div class="col d-flex justify-content-center">
+                        <img src="{{ food_record.image.url }}" 
+                            id="food-image-tumbnail"
+                            alt="Food Image"
+                            width="600"
+                            height="500"
+                            style="border-radius: .6rem;">
+                    </div>
+                    <div class="col d-flex justify-content-center">
+                        <!-- Button trigger modal -->
+                        <div class="d-flex justify-content-center">
+                            <a class="btn btn-dark upload-img-btn"
+                                style="width: 20rem"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#foodImageUpload">
+                                <h3>Upload Image</h3>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Food Detail Form Div -->
+                <div class="food-detail ms-5">
+                    <form method="POST" enctype="multipart/form-data"
+                        class="bg-light p-5 rounded"
+                        style="margin: 5rem 0;
+                            border: 1px solid rgb(255, 81, 81);">
+                        {% csrf_token %}
+                        <div class="mb-4 row">
+                            <div class="col-3">
+                                {{ form.food_name.label_tag }}
+                            </div>
+                            <div class="col d-flex align-item-center">
+                                {{ form.food_name }}
+                            </div>
+                        </div>
+                        <div class="mb-4 row">
+                            <div class="col-3">
+                                {{ form.category.label_tag }}
+                            </div>
+                            <div class="col d-flex align-item-center">
+                                {{ form.category }}
+                            </div>
+                        </div>
+                        <div class="mb-4 row">
+                            <div class="col-3">
+                                {{ form.reward_point.label_tag }}
+                            </div>
+                            <div class="col d-flex align-item-center">
+                                {{ form.reward_point }}
+                            </div>
+                        </div>
+                        <div class="mb-4 row">
+                            <div class="col-3">
+                                {{ form.price.label_tag }}
+                            </div>
+                            <div class="col d-flex align-item-center">
+                                {{ form.price }}
+                            </div>
+                        </div>
+                        <div class="mb-4 row">
+                            <div class="col-3 d-flex">
+                                {{ form.tag.label_tag }}
+                            </div>
+                            <div class="col d-flex align-item-center">
+                                {{ form.tag }}
+                            </div>
+                            <div class="col-1 d-flex align-item-center justify-content-center">
+                                <a class="btn btn-dark" 
+                                    target="_blank"
+                                    href="{% url 'foodApp:food_foodTagList' %}"
+                                    style="margin: auto 0;">Add</a>
+                            </div>
+                        </div>
+                        <div class="mb-4 row">
+                            <div class="col-3 d-flex align-item-center">
+                                {{ form.addon.label_tag }}
+                            </div>
+                            <div class="col d-flex align-item-center">
+                                {{ form.addon }}
+                            </div>
+                            <div class="col-1 d-flex align-item-center justify-content-center">
+                                <a class="btn btn-dark" 
+                                    target="_blank"
+                                    href="{% url 'foodApp:food_foodAddonList' %}"
+                                    style="margin: auto 0;">Add</a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <button type="submit" 
+                                class="btn btn-lg btn-dark mt-4">Update</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Food Ratings + Total Views Column -->
+            <div class="col">
+                <!-- Food Image Form Div -->
+                <!-- Shifted to the modal popup section ("foodImageUpload") -->
+
+                <!-- Food Average Rating Display Div -->
+                <div class="food-rating mt-5">
+                    <div class="row p-4" id="food-avg-rating">
+                        <div class="col text-center">
+                            <h1>Avg. Rating</h1>
+                            <h2 class="d-flex justify-content-center fw-bolder"> 
+                                {{ avgRating }} / 5
+                            </h2>
+
+                            <div class="row mt-4">
+                                <div class="col">
+                                    <!-- Rating-1 Progress Bar Div -->
+                                    <div class="row">
+                                        <div class="col-2 d-flex align-item-center justify-content-end">
+                                            <h4 style="margin: auto 0;">
+                                                1 <span class="fas fa-star checked"></span>
+                                            </h4>
+                                        </div>
+                                        <div class="col"
+                                            style="padding: .7rem .5rem;">
+                                            <div class="progress" style="margin: .2rem 0;">
+                                                <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_1 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex justify-content-center px-0">
+                                            <div class="container-fluid px-0 div-each-counter fw-bold"
+                                                style="margin: auto 0;">
+                                                {{ rating_1_counter }} 
+                                            </div> 
+                                        </div>
+                                    </div>
+
+                                    <!-- Rating-2 Progress Bar Div -->
+                                    <div class="row">
+                                        <div class="col-2 d-flex align-item-center justify-content-end">
+                                            <h4 style="margin: auto 0;">
+                                                2 <span class="fas fa-star checked"></span>
+                                            </h4>
+                                        </div>
+                                        <div class="col"
+                                            style="padding: .7rem .5rem;">
+                                            <div class="progress" style="margin: .2rem 0;">
+                                                <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_2 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex justify-content-center px-0">
+                                            <div class="container-fluid px-0 div-each-counter fw-bold"
+                                                style="margin: auto 0;">
+                                                {{ rating_2_counter }} 
+                                            </div> 
+                                        </div>
+                                    </div>
+
+                                    <!-- Rating-3 Progress Bar Div -->
+                                    <div class="row">
+                                        <div class="col-2 d-flex align-item-center justify-content-end">
+                                            <h4 style="margin: auto 0;">
+                                                3 <span class="fas fa-star checked"></span>
+                                            </h4>
+                                        </div>
+                                        <div class="col"
+                                            style="padding: .7rem .5rem;">
+                                            <div class="progress" style="margin: .2rem 0;">
+                                                <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_3 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex justify-content-center px-0">
+                                            <div class="container-fluid px-0 div-each-counter fw-bold"
+                                                style="margin: auto 0;">
+                                                {{ rating_3_counter }} 
+                                            </div> 
+                                        </div>
+                                    </div>
+
+                                    <!-- Rating-4 Progress Bar Div -->
+                                    <div class="row">
+                                        <div class="col-2 d-flex align-item-center justify-content-end">
+                                            <h4 style="margin: auto 0;">
+                                                4 <span class="fas fa-star checked"></span>
+                                            </h4>
+                                        </div>
+                                        <div class="col"
+                                            style="padding: .7rem .5rem;">
+                                            <div class="progress" style="margin: .2rem 0;">
+                                                <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_4 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex justify-content-center px-0">
+                                            <div class="container-fluid px-0 div-each-counter fw-bold"
+                                                style="margin: auto 0;">
+                                                {{ rating_4_counter }} 
+                                            </div> 
+                                        </div>
+                                    </div>
+
+                                    <!-- Rating-5 Progress Bar Div -->
+                                    <div class="row">
+                                        <div class="col-2 d-flex align-item-center justify-content-end">
+                                            <h4 style="margin: auto 0;">
+                                                5 <span class="fas fa-star checked"></span>
+                                            </h4>
+                                        </div>
+                                        <div class="col"
+                                            style="padding: .7rem .5rem;">
+                                            <div class="progress" style="margin: .2rem 0;">
+                                                <div class="progress-bar" role="progressbar" style="width: {{ avgRating_for_5 }}%; background-color: rgb(255, 81, 81);" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 d-flex justify-content-center px-0">
+                                            <div class="container-fluid px-0 div-each-counter fw-bold"
+                                                style="margin: auto 0;">
+                                                {{ rating_5_counter }} 
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horizontal Ruler -->
+                <div class="container px-5 text-start"
+                    style="width: 48rem; 
+                        height: .1rem; 
+                        margin: 3rem 0 0 5rem;
+                        background-color: rgb(255, 81, 81)">
+                    <hr>
+                </div>
+
+                <!-- Food Total Views Div -->
+                <div class="food-view mt-5">
+                    <div class="row p-4" id="food-total-views">
+                        <div class="col text-center">
+                            <h1>Total Views</h1>
+                            <h2 class="d-flex justify-content-center fw-bolder"> 
+                                <span class="me-3"> 
+                                    <i class="fas fa-eye"></i> 
+                                </span>
+                                {{ food_record.total_viewed }} </h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horizontal Ruler -->
+                <div class="container px-5 text-start"
+                    style="width: 48rem; 
+                        height: .1rem; 
+                        margin: 3rem 0 0 5rem;
+                        background-color: rgb(255, 81, 81)">
+                    <hr>
+                </div>
+
+                <!-- Food Review Button Div -->
+                <div class="food-view mt-5">
+                    <div class="row p-4" id="food-review-btn-holder">
+                        <div class="col text-center">
+                            <a href="#" class="btn btn-dark">
+                                <h2 class="d-flex justify-content-center text-white">
+                                    <span class="me-3"> 
+                                        <i class="fas fa-eye"></i> 
+                                    </span>
+                                    Food Review
+                                </h2>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Modal Popups -->
+    {% block modal %} 
+        
+        <!-- Modal -->
+        <div class="modal fade" id="foodImageUpload" tabindex="-1" aria-labelledby="foodImageUploadLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="foodImageUploadLabel">Upload Food Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" enctype="multipart/form-data"
+                        class="bg-light p-5 border border-warning rounded"
+                        style="margin: 5rem 0;">
+                        {% csrf_token %}
+                        <h2>Upload a New Food Image</h2>
+                        <div style="margin: 3rem 0;" id="image-div2">
+                            {{ foodImageForm.image }}
+                        </div>
+                </div>
+                <div class="modal-footer">
+                        <button type="button" class="btn btn-lg btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                        <button type="submit" 
+                                class="btn btn-lg btn-dark">Upload</button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+    
+    {% endblock %}
+
+{% endblock %}
+
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+    <!-- Flash Msg JS -->
+    <script src="{% static 'js/includes/flashMsg/flash_msg.js' %}"></script>
+
+    <!-- Food Image Hover Effect -->
+    <!-- <script>
+        foodImgThumbnailBtnHolder = document.getElementById('food-image-tumbnail-btn-holder');
+        foodImgUploadBtn = document.querySelector('.upload-img-btn');
+
+
+        document.onload = () => {
+            alert('Hellow')
+            // foodImgThumbnailBtnHolder.style.position = 'relative';
+            // foodImgUploadBtn.style.position = 'absolute';
+            // foodImgUploadBtn.style.top = '-3.5rem';
+        };
+
+        // foodImgThumbnail = document.getElementById("demo").addEventListener("click", myFunction);
+
+        foodImgThumbnailBtnHolder.addEventListener('mouseenter', () => {
+            // alert('Mouse Enter');
+            foodImgThumbnailBtnHolder.style.position = 'relative';
+            foodImgUploadBtn.style.position = 'absolute';
+            foodImgUploadBtn.style.top = '-1rem';
+            foodImgUploadBtn.style.transition = '.4s';
+        });
+        
+        foodImgThumbnailBtnHolder.addEventListener('mouseleave', () => {
+            // alert('Mouse Leave');
+            foodImgThumbnailBtnHolder.style.position = 'relative';
+            foodImgUploadBtn.style.position = 'absolute';
+            foodImgUploadBtn.style.top = '-3.5rem';
+            foodImgUploadBtn.style.transition = '.4s';
+        });
+
+        // foodImgUploadBtn.addEventListener('click', () => {
+        //     alert('Hellow');
+        // });
+
+        // function UploadImgBtnDown(x) {
+        //     x.style.top = "1rem";
+        // }
+
+        // function UploadImgBtnUp(x) {
+        //     x.style.top = "-1rem";
+        // }
+
+    </script> -->
+{% endblock %}
+
+
+
+

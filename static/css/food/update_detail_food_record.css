@@ -1,0 +1,97 @@
+/* Hidding the Food Image "Clear" checkbox from the food-detail-page; usually it exists at the bottom of the iamge-url field */
+#image-clear_id{
+    display: none;
+}
+
+form label{
+    opacity: 100%;
+    font-size: 1em;
+    margin-left: 0;
+}
+
+form label[for='id_tag'],
+form label[for='id_addon'] {
+    margin: auto 0;
+}
+
+.form-control{
+    font-size: 1.2rem;
+    padding: .75rem;
+}
+
+
+/* Coudln't get the image-label-id, but set the image-div id & set all the label to "display: none" insdie of that div */
+/* #image-div label{
+    display: none;
+} */
+
+label[for="image-clear_id"]{
+    display: none;
+}
+
+
+/* Custom Food-Image file upload form w/ single file-type input field. Make a new form only to render the food-image-update-field aside */
+/* #custom-file-upload-btn {
+    display: none;
+} */
+
+/* .custom-file-upload > a {
+    display: none;
+} */
+/* .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+} */
+
+
+
+
+
+/* ----------------------------------------------------------------------------- */
+/* Food Tag Input-Field ID is created (modified) inside the "foodsystem\food\forms.py" */
+/* Change the placeholder font-color */
+#tag-name-update::placeholder{
+    color: rgb(192, 192, 192);
+}
+
+#tag-name-update::placeholder { /* Microsoft Edge */
+    color: rgb(192, 192, 192);
+}
+
+#food_tag_add_btn_holder{
+    text-align: left;
+}
+
+#food_tag_add_btn{
+    padding: 12.7px 20px;
+    font-weight: bold;
+    border-radius: 0 5px 5px 0;
+    background-color: rgb(226, 123, 123);
+}
+
+#food_tag_add_btn:hover {
+    background-color: rgb(209, 110, 110);
+}
+/* ----------------------------------------------------------------------------- */
+
+
+
+
+/* ----------------------------------------------------- */
+/* #food-image-tumbnail-btn-holder {
+    position: relative;
+}
+.upload-img-btn {
+    position: absolute;
+    width: 20rem;
+    padding-top: 2rem;
+    top: 31rem;
+    z-index: -1;
+    transition: 0.4s;
+}
+#food-image-tumbnail-btn-holder:hover .upload-img-btn {
+    top: 33rem;
+} */
+/* ----------------------------------------------------- */

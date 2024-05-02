@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_customer.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+
+    <!-- Food Quantity Scale Styling -->
+    <!-- [ not using the styling now ] -->
+    <!-- Css File Source: foodsystem\static\css\restaurantCustomer\quantity_scale.css -->
+
+
+
+    <style>
+        .hr {
+            width: 100%;
+            height: 2px;
+            color: rgb(0, 0, 0);
+        }
+    </style>
+
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <div class="row container-fluid">
+        <div class="col">
+            <a href="{% url 'restCustApp:rcust_homepage' %}" 
+                class="text-white" 
+                style="min-width: 7rem; text-decoration: none;">
+                <h3>
+                    Multi Vendor <br/>
+                    Food Recommendation System
+                </h3>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+<!-- Food Cart Icon -->
+{% block cart %} 
+
+    <a href="{% url 'restCustApp:foodCart' cart.cart_id %}"
+        class="text-white text-decoration-none d-flex justify-content-center align-items-center" 
+        style="height: 5rem;
+        width: 5rem;">
+
+        <i class="fas fa-shopping-cart fa-2x"></i>
+    </a>
+
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+
+
+    <div class="row m-5">
+        <div class="col"
+            style="background-color: rgb(219, 219, 219);
+                border-radius: 1rem;">
+            <div class="row my-5">
+                <div class="col d-flex justify-content-center">
+                    <h1> Order Summary </h1>
+                </div>
+            </div>
+            
+            <!-- <br>
+            <p> Cart: {{ cart }}
+            </p>
+            <p> Cart ID: {{ cart.cart_id }} 
+                <br/>
+                <small> Cart ID will be passed in the (delivery-handle, personal-detail-handle, payment-method-handle) forms to update different data of the order-instance. </small>
+            </p>
+            <p> Restaurant ID: {{ restaurant }} </p>
+            <p> Order ID: {{ custOrder }} </p>
+            <p> Order Payment Method: {{ custOrder.payment_method }} </p>
+            <p> Customer: {{ customer }} </p>
+            <p> Customer ID: {{ customer.id }} </p>
+            <p> Customer Email: {{ customer.email }} </p>
+            <p> Customer First Name: {{ customer.first_name }} </p>
+            <p> Customer Last Name: {{ customer.last_name }} </p>
+            <p> Customer Contact Number: {{ customer.phone }} </p>
+            
+            <br/>
+            <br/>
+            
+            {% if custOrder.delivery_address and custOrder.delivery_time %}
+                <p> Order Delivery Address: {{ custOrder.delivery_address }} </p>
+                <p> Order Delivery Time: {{ custOrder.delivery_time }} </p>
+            {% endif %}
+                
+            <br/> -->
+
+
+            <!-- [ Might not display in the order page ] -->
+            <!-- <div class="row">
+                <div class="col-2 bg-primary"></div>
+                <div class="col bg-success text-center">
+                    <h1>
+                        'restCustApp:rest_page_cust_view' restaurant.id
+                        <a href="#"
+                            class="btn btn-lg btn-dark">Add Food +</a>
+                    </h1>
+                </div>
+                <div class="col-2 bg-info"></div>
+            </div> -->
+
+            <table class="table">
+                <tbody>
+                    <!-- [ For loop to the cart-items ] -->
+                    <tr>
+                        <td>
+                            <div class="row">
+                                <!-- <div class="col-1 d-flex justify-content-center align-items-center"></div> -->
+                                <div class="col bg-light"
+                                    style="border-radius: 1rem;">
+
+                                    <!-- Order Delivery Address Detail, Personal Details & Payment Method -->
+                                    <div class="row my-5 mx-3">
+                                        <div class="col">
+                                            <!-- ---------------------------------- -->
+                                            <!-- [ Important Note ]: if order-delivery-address & delibery-time is available, then show the form with the values in labels, otherwise display a form, through which the customer can save the delivery address of the order-instance. -->
+                                            {% if custOrder.delivery_address and custOrder.delivery_time %}
+                                            <!-- Delivery Detail Form (Summarized View) -->
+                                            <form>
+                                                <h2> 1. Delivery Details </h2>
+                                                <div class="mb-3">
+                                                    <label for="deliveryTime" class="form-label">Delivery Time: 
+                                                        <b> {{ custOrder.delivery_time }} </b>
+                                                    </label>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="deliveryAddress" class="form-label">Delivery Address:
+                                                        <b> {{ custOrder.delivery_address }} </b>
+                                                    </label>
+                                                </div>
+                                            </form>
+
+                                            <br/>
+                                            <hr/>
+                                            <br/>
+
+                                            <!-- Personal Detail form (Submit Function - value will be inherited from the "CustomUser" model) -->
+                                            <form action="{% url 'restCustApp:customerOrderPersonalDetail' customer.id cart.cart_id  %}" 
+                                                method="POST">
+                                                {% csrf_token %}
+                                                <h2> 2. Personal Details </h2>
+                                                <div class="mb-3">
+                                                    <label for="email" class="form-label">Email</label>
+                                                    <input type="email" class="form-control" id="email" name="email" 
+                                                        value="{{ customer.email }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="firstName" class="form-label">First Name</label>
+                                                    <input type="text" class="form-control" id="firstName" name="firstName" 
+                                                        value="{{ customer.first_name }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="lastName" class="form-label">Last Name</label>
+                                                    <input type="text" class="form-control" id="lastName" name="lastName" 
+                                                        value="{{ customer.last_name }}" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="phoneNumber" class="form-label">Phone Number</label>
+                                                    {% if customer.phone %}
+                                                        <input type="text" class="form-control" id="phoneNumber_DBvalue" name="phoneNumber_DBvalue" 
+                                                            value="{{ customer.phone }}" required>
+                                                    {% else %}
+                                                        <input type="text" class="form-control" id="phoneNumber_null" name="phoneNumber" 
+                                                            required>
+                                                    {% endif %}
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                            </form>
+
+                                            <br/>
+                                            <hr/>
+                                            <br/>
+
+                                            <h2> 3. Payment </h2>
+                                            <div class="row">
+                                                <p>Select any of the following payment method</p>
+                                                <div class="col">
+                                                    {% if custOrder.payment_method == 'COD' %}
+                                                    <br/>
+                                                    <button class="btn btn-lg btn-danger">Cash On Delivery</button>
+                                                    {% else %}
+                                                    <form action="{% url 'restCustApp:customerOrderPaymentMethodCOD' custOrder cart.cart_id %}" 
+                                                        method="POST">
+                                                        {% csrf_token %}
+                                                        <br/>
+                                                        <button type="submit" class="btn btn-lg btn-secondary">Cash On Delivery</button>
+                                                    </form>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col">
+                                                    {% if custOrder.payment_method == 'SSLCommerz' %}
+                                                    <br/>
+                                                    <button class="btn btn-lg btn-danger">SSLCommerz</button>
+                                                    {% else %}
+                                                    <form action="{% url 'restCustApp:customerOrderPaymentMethodSSLCommerz' custOrder cart.cart_id %}" 
+                                                        method="POST">
+                                                        {% csrf_token %}
+                                                        <br/>
+                                                        <button type="submit" class="btn btn-lg btn-secondary">SSLCommerz</button>
+                                                    </form>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="col-7"></div>
+                                            </div>
+                                            
+
+                                            {% else %}
+                                            <!-- Delivery Detail Form (Submit Function) -->
+                                            <form action="{% url 'restCustApp:customerOrderDeliveryDetail' cart %}" 
+                                                method="POST">
+                                                {% csrf_token %}
+                                                <h2> 1. Delivery Details </h2>
+                                                <div class="mb-3">
+                                                    <label for="deliveryTime" class="form-label">Delivery Time</label>
+                                                    <input type="date" class="form-control" id="deliveryTime" name="deliveryTime" required>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="deliveryAddress" class="form-label">Delivery Address</label>
+                                                    <textarea class="form-control" placeholder="Delivery Address" 
+                                                        id="deliveryAddress" 
+                                                        name="deliveryAddress"
+                                                        style="height: 100px"
+                                                        required></textarea>
+                                                </div>
+                                                <button type="submit" class="btn btn-primary">Confirm</button>
+                                            </form>
+
+                                            <br/>
+                                            <hr/>
+                                            <br/>
+
+                                            <!-- Personal Detail form will not be shown in this part, after setting the delivery-details, the personal-detail form will be displayed on the summarized-view of delivery-details -->
+                                            <form>
+                                                <h2> 2. Personal Details </h2>
+                                            </form>
+                                            {% endif %}
+                                            <!-- ---------------------------------- -->
+                                        </div>
+                                    </div>
+
+                                    <br/>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+
+        <div class="col-4 ms-3"
+            style="background-color: rgb(219, 219, 219);
+            border-radius: 1rem;">
+            <div class="my-4">
+                <div class="row my-5">
+                    <div class="col">
+                        <h2> Your Order from <br/>
+                            <b> Restaurant </b> 
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- ---------------------------------- -->
+                <table class="table table-borderless">
+                    <tbody>
+                        
+                        {% for critem in cartItems  %}
+                            <tr>
+                                <th scope="row"> {{ critem.quantity }} </th>
+                                <td>x</td>
+                                <td> {{ critem.food }} </td>
+                                <td>Tk. {{ critem.price }} </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <hr/>
+
+                <table class="table table-borderless">
+                    <tbody>
+                        <!-- subtotal & total food-price table-row -->
+                        <tr>
+                            <td> Subtotal: </td>
+                            <td></td>
+                            <td></td>
+                            <td> Tk. {{ cartTotalPrice }} </td>
+                        </tr>
+                        <tr>
+                            <td> Delivery Fee: </td>
+                            <td></td>
+                            <td></td>
+                            <td> Tk. {{ deliveryCharge }} </td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td> Total Price <small>(Incl. VAT)</small>: </td>
+                            <td></td>
+                            <td></td>
+                            <td> Tk. {{ cartPriceDeliveryChargeVAT }} </td>
+                        </tr>
+                        <tr class="fw-bold">
+                            <td> <small>Payment Method</small>: 
+                                {{ custOrder.payment_method }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <!-- ---------------------------------- -->
+                {% if custOrder.delivery_address and custOrder.delivery_time %}
+                    <!-- [ Important ]: a form will be implemented along with the hidden fields of the food-pricings -->
+                    <form action="{% url 'restCustApp:customerOrderPayment' custOrder cart %}"
+                        method="POST">
+                        {% csrf_token %}
+                        <input type="text" class="form-control" id="grandTotalPrice" name="grandTotalPrice" 
+                            value="{{ cartPriceDeliveryChargeVAT }}" required hidden>
+                        <input type="text" class="form-control" id="payment" name="payment" 
+                            value="{{ custOrder.payment_method }}" required hidden>
+                        <button type="submit" 
+                            class="btn btn-lg btn-dark"
+                            id="promo_code_add_btn">Confirm Order</button>
+                    </form>
+                {% else %}
+                    <button class="btn btn-lg btn-secondary">Confirm Order</button>
+                {% endif %}
+                <!-- -------------------------- -->
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+
+    <!-- Custom JS for changing food quantity -->
+    <!-- <script src="{% static 'js/restaurantCustomer/quantity_scale.js' %}"></script> -->
+    
+    <!-- Axios CDN -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+    <!-- Create order-record using axios-post-method -->
+    <!-- <script src="{% static 'js/restaurantCustomer/restaurant_page_cust_view_api.js' %}"></script> -->
+    
+{% endblock %}

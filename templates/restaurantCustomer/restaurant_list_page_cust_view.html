@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_customer.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} {% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <div class="row container-fluid">
+        <div class="col">
+            <a href="{% url 'restCustApp:rcust_homepage' %}" 
+                class="text-white" 
+                style="min-width: 7rem; text-decoration: none;">
+                <h3>
+                    Multi Vendor <br/>
+                    Food Recommendation System
+                </h3>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+
+
+    <div class="container-fluid pb-5 px-0"
+        style="background-color: rgb(255, 255, 255);
+            margin: 0-1rem;">
+    
+    
+
+        <!-- Restaurant banner Image -->
+        <div class="row">
+            <div class="col text-center">
+                <h1>
+                    <b> Restaurants List </b>
+                </h1>
+            </div>
+        </div>
+    
+    
+        <div class="row px-5">
+            <div class="col"
+                style="margin-left: 1.5rem;">
+                <!-- Restaurant: <b> {{ restaurantInfo }} </b> <br/>
+                Restaurant ID : <b> {{ restaurantInfo.id }} </b> <br/>
+    
+    
+                <p>fetch all the food of this restaurant</p>
+                <p>Customer: {{ user }} </p>
+                <p>Customer ID: {{ user.id }} </p>
+                <p>Customer Cart: {{ custCart }} </p>
+                <p>Customer Cart ID: {{ custCart.id }} </p> -->
+
+                <div class="row"
+                    style="margin-top: 5rem">
+                    
+                    
+                    <!-- ---------------------------- -->
+                    <!-- Restaurants List Table -->
+                    <table class="table table-hover table-striped"
+                    style="margin: 5rem 0 5rem 0;">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Restaurant Name</th>
+                            <th scope="col">Contact</th>
+                            <th scope="col" 
+                                class="text-center">View Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rt in restaurants %}
+                                <tr>
+                                    <th scope="row"
+                                        class="py-4">#{{ forloop.counter }}</th>
+                                    <td class="py-4">{{ rt.restaurant_name }}</td>
+                                    <td class="py-4">{{ rt.phone }}</td>
+                                    <td class="text-center"
+                                        style="padding: 1.3rem 0;">
+                                        <a href="{% url 'restCustApp:rest_page_cust_view' rt.id  %}"
+                                            class="btn btn-primary btn-sm px-4">
+                                            View
+                                        </a>
+                                    </td>
+                                </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10" class="text-center">
+                                Total Orders: <b> {{ total_restaurant_num }} </b>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                    <!-- ---------------------------- -->
+
+                </div>
+                
+            </div>
+            <!-- <div class="col-2 bg-secondary">
+                <h4>Add to Cart</h4>
+            </div> -->
+        </div>
+    </div>
+    
+    
+
+    <h1>
+    </h1>
+
+
+{% endblock %}
+
+
+
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+
+    <!-- Axios CDN -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script> -->
+
+    <!-- Create order-record using axios-post-method -->
+    <!-- <script src="{% static 'js/restaurantCustomer/restaurant_page_cust_view_api.js' %}"></script> -->
+
+{% endblock %}
+
+
+
+
+
+<!-- V A L I D -->
+<!-- <h1> Restaurant Page: Customer View </h1>
+
+<h5> Restaurant ID:  {{ rest_id }} </h5>
+
+<p>
+    Restaurant: <b> {{ restaurantInfo }} </b> <br/>
+    Open at: <b> {{ r_profile.opening_time }} </b> <br/>
+    Close at: <b> {{ r_profile.closing_time }} </b> <br/>
+    Close: <b> {{ r_profile.is_closed }} </b> <br/>
+    Restaurant Pic: <b> {{ r_profile.restaurant_profile_pic }} </b> <br/>
+    Account created at: <b> {{ r_profile.created_at }} </b> <br/>
+    Account info last updated at: <b> {{ r_profile.last_updated_at }} </b>
+</p> -->

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% load static %}
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/restaurantStaff/restaurant_staff_unapproved.css' %}">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- Fontawesome Setup -->
+    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
+    <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+</head>
+<body>
+    <h1>HomePage (Restaurant Staff - Unapproved in the system)</h1>
+
+    <h3>Protect from unauthenticated users</h3>
+
+    <h4>If you're redirected to this pgae, it means, you're a restaurant staff, who is not yet <span style="color: red;">approved by yor restaurant owner</span>.</h4>
+
+    <small style="color: red;">
+        Inside each decorator, <b>base template</b> for each user will be added later for redirection.
+    </small>
+
+
+    <section class="team">
+        <div class="container">
+            <h1> Restaurant Name </h1>
+            <h1 id="our-team"> Our Team </h1>
+
+            <div class="row">
+                
+                <!-- Team Members Div -->
+                <!-- [ For-loop should be applied here ] -->
+                <!-- #01 -->
+                <div class="col-md-3 profile text-center">
+                    <div class="img-box">
+                        <img src="https://images.pexels.com/photos/920382/pexels-photo-920382.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=150&w=150" 
+                            alt="restaurant-members-pics"
+                            class="img-responsive">
+                        <ul>
+                            <a href="#"> <li> <i class="fab fa-facebook-f"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-twitter"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-linkedin-in"></i> </li> </a>
+                        </ul>
+                    </div>
+                    <h2>Akshay Kumar</h2>
+                    <h3>Restaurant Owner</h3>
+                    <p> Lorem ipsum dolor sit amet. </p>
+                </div>
+
+                <!-- #02 -->
+                <div class="col-md-3 profile text-center">
+                    <div class="img-box">
+                        <img src="https://images.pexels.com/photos/920382/pexels-photo-920382.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=150&w=150" 
+                            alt="restaurant-members-pics"
+                            class="img-responsive">
+                        <ul>
+                            <a href="#"> <li> <i class="fab fa-facebook-f"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-twitter"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-linkedin-in"></i> </li> </a>
+                        </ul>
+                    </div>
+                    <h2>Ranveer Singh</h2>
+                    <h3>Restaurant Staff</h3>
+                    <p> Lorem ipsum dolor sit amet. </p>
+                </div>
+
+                <!-- #03 -->
+                <div class="col-md-3 profile text-center">
+                    <div class="img-box">
+                        <img src="https://images.pexels.com/photos/920382/pexels-photo-920382.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=150&w=150" 
+                            alt="restaurant-members-pics"
+                            class="img-responsive">
+                        <ul>
+                            <a href="#"> <li> <i class="fab fa-facebook-f"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-twitter"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-linkedin-in"></i> </li> </a>
+                        </ul>
+                    </div>
+                    <h2>Ajay Devgan</h2>
+                    <h3>Restaurant Staff</h3>
+                    <p> Lorem ipsum dolor sit amet. </p>
+                </div>
+
+                <!-- #04 -->
+                <div class="col-md-3 profile text-center">
+                    <div class="img-box">
+                        <img src="https://images.pexels.com/photos/920382/pexels-photo-920382.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=150&w=150" 
+                            alt="restaurant-members-pics"
+                            class="img-responsive">
+                        <ul>
+                            <a href="#"> <li> <i class="fab fa-facebook-f"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-twitter"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-linkedin-in"></i> </li> </a>
+                        </ul>
+                    </div>
+                    <h2>Motiya Chowdhury</h2>
+                    <h3>Restaurant Staff</h3>
+                    <p> Lorem ipsum dolor sit amet. </p>
+                </div>
+
+                <!-- #05 -->
+                <div class="col-md-3 profile text-center">
+                    <div class="img-box">
+                        <img src="https://images.pexels.com/photos/920382/pexels-photo-920382.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=150&w=150" 
+                            alt="restaurant-members-pics"
+                            class="img-responsive">
+                        <ul>
+                            <a href="#"> <li> <i class="fab fa-facebook-f"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-twitter"></i> </li> </a>
+                            <a href="#"> <li> <i class="fab fa-linkedin-in"></i> </li> </a>
+                        </ul>
+                    </div>
+                    <h2>Motiya Chowdhury</h2>
+                    <h3>Restaurant Staff</h3>
+                    <p> Lorem ipsum dolor sit amet. </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</body>
+</html>

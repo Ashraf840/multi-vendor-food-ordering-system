@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_customer.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <link rel="stylesheet" href="{% static 'css/restaurantCustomer/index_rest_slider.css' %}">
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <div class="row container-fluid">
+        <div class="col">
+            <a href="{% url 'restCustApp:rcust_homepage' %}" 
+                class="text-white" 
+                style="min-width: 7rem; text-decoration: none;">
+                <h3>
+                    Multi Vendor <br/>
+                    Food Recommendation System
+                </h3>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+
+    <div class="row py-3">
+        <div class="col text-center">
+            <h1> Restaurant Customer: Homepage </h1>
+        </div>
+    </div>
+
+    <div class="row"
+        style="margin-top: 5rem;">
+        <!-- <div class="col"></div> -->
+        <div class="col-12">
+
+
+
+            <div class="row mt-5 pt-sm-0">
+                <!-- Pagination -->
+                <!-- Pizza list arrow navigation -->
+                <div class="row py-2 d-flex justify-content-center align-items-center"
+                    style="background-color: rgba(223, 223, 223, 0.479);">
+                    <!-- Left Arrow Sign -->
+                    {% if restaurants.has_other_pages %}
+                        <div class="col-1 d-flex justify-content-center align-items-center arrow-holder-col"
+                            style="margin-left: 1rem;">
+                            {% if restaurants.has_previous %}
+                                <i class="arrow left"
+                                    onclick="location.href='?page={{ restaurants.previous_page_number }}'"></i>
+                            {% else %}
+                                <i class="arrow left disabled"></i>
+                            {% endif %}
+                        </div>
+
+
+                        
+                        {% for rp in rest_profile %}
+                            <!-- <img src="{{ rp.get_rest_photo_url }}" 
+                                alt="restaurant-image"
+                                style="width: 50%;
+                                    height: 50%;"> -->
+                        {% endfor %}
+                            
+                        
+                        <!-- Restaurants Slider for customer (card-style) -->
+                        {% for rest in restaurants  %}
+                        <!-- Put the restaurant page id with the url -->
+                        <div class="card" 
+                            style="width: 18rem; margin: 0 1rem;
+                                cursor: pointer;"
+                            >
+                            <a href="{% url 'restCustApp:rest_page_cust_view' rest.id  %}"
+                                style="text-decoration: none;
+                                    color: black;">
+                                <img src="{{ rest.get_rest_photo_url }}" 
+                                    class="card-img-top" 
+                                    alt="restaurant-image"
+                                    style="width: 18.02rem;
+                                        height: 8rem;
+                                        margin: -0.1rem 0 0 -.8rem">
+                                <div class="card-body">
+                                    <!-- Link Ref: https://stackoverflow.com/questions/17596141/django-slice-string-in-template  -->
+                                    <h5 class="card-title"
+                                        style="font-weight: 700;"> 
+                                        {% if rest.restaurant_name|length >= 15 %}
+                                        {{ rest.restaurant_name|truncatechars:18 }}
+                                        <br />
+                                        {% else %}
+                                        {{ rest.restaurant_name }}
+                                        {% endif %}
+                                    </h5>
+                                    <!-- <small> {{ rest.id }} </small> -->
+                                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                    <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+
+
+                        <!-- Right Arrow Sign -->
+                        <div class="col-1 d-flex justify-content-center align-items-center arrow-holder-col"
+                            style="margin-right: 1rem;">
+                            {% if restaurants.has_next %}
+                                <i class="arrow right"
+                                    onclick="location.href='?page={{ restaurants.next_page_number }}'"></i>
+                            {% else %}
+                                <i class="arrow right disabled"></i>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+
+        </div>
+        <!-- <div class="col"></div> -->
+    </div>
+
+{% endblock %}
+
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+    <script>
+        // var url = document.querySelector('.card').attr("data-url");
+        // function redirect_restaurant_page(restid) {
+        //     url = `#`;
+        //     window.location.href = url;
+        //     // alert(restid)
+        // }
+
+        // function redirect_pizza_list() {
+        //     url = "#";
+        //     window.location.href = url;
+        // }
+    </script>
+{% endblock %}

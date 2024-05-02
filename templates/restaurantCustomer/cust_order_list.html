@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_customer.html' %}
+{% load static %}
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <link rel="stylesheet" href="{% static 'css/restaurantCustomer/index_rest_slider.css' %}">
+{% endblock %}
+
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <div class="row container-fluid">
+        <div class="col">
+            <a href="{% url 'restCustApp:rcust_homepage' %}" 
+                class="text-white" 
+                style="min-width: 7rem; text-decoration: none;">
+                <h3>
+                    Multi Vendor <br/>
+                    Food Recommendation System
+                </h3>
+            </a>
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+
+    <div class="container-fluid pb-5 px-0"
+        style="background-color: rgb(255, 255, 255);">
+
+        <!-- Restaurant banner Image -->
+        <div class="row mx-3"
+            style="padding-top: 3rem;">
+            <div class="col text-center">
+                <h1> Restaurant Customer: My Orders </h1>
+
+
+                
+                <!-- Order List Table -->
+                <table class="table table-hover table-striped"
+                    style="margin: 8rem 0 5rem 0;">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Order Number</th>
+                            <th scope="col">Payment</th>
+                            <th scope="col">Date Purchased</th>
+                            <th scope="col">Paid</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Cancelled</th>
+                            <th scope="col">Price</th>
+                            <th scope="col" 
+                                class="text-center">View Detail</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for o in custOrders %}
+                            {% if o.is_cancelled %}
+                                <tr style="background-color: rgb(255, 255, 255);">
+                            {% else %}
+                                <tr>
+                            {% endif %}
+                                    <th scope="row"
+                                        class="py-4">#{{ forloop.counter }}</th>
+                                    <td class="py-4">{{ o.order_num }}</td>
+                                    <td class="py-4">{{ o.payment_method }}</td>
+                                    <td class="py-4">{{ o.delivery_time }}</td>
+                                    {% if o.is_paid %}
+                                        <td class="fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Paid</td>
+                                    {% else %}
+                                        <td class="fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Not Paid</td>
+                                    {% endif %}
+                                    <td style="padding: 1.2rem 0 1.2rem 0.5rem;">
+                                        <span class="badge bg-info m-0 py-2 fs-6 statusCol" id="statusCol_{{o.order_id}}">
+                                            {{ o.status }}
+                                        </span>
+                                    </td>
+                                    {% if o.is_cancelled %}
+                                        <td class="text-danger fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Cancelled</td>
+                                    {% else %}
+                                        <td class="fw-bold fs-4"
+                                            style="padding: 1.05rem 0 1.05rem 0.3rem;">Ordered</td>
+                                    {% endif %}
+                                    <td class="py-4">{{ o.price }}</td>
+                                    <td class="text-center"
+                                        style="padding: 1.3rem 0;">
+                                        <a href="{% url 'restCustApp:customerfoodOrderDetail' o.order_id %}"
+                                            class="btn btn-primary btn-sm px-4">
+                                            View Detail
+                                        </a>
+                                    </td>
+                                </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="10" class="text-center">
+                                Total Orders: <b> {{ total_order_num }} </b>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+<!-- Using/ extending the "foodsystem/templates/base_restaurant_owner.html" file as a base-template -->
+
+
+
+{% extends 'base_restaurant_owner.html' %}
+{% load static %}
+
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <!-- Page Styling -->
+    <link rel="stylesheet" href="{% static 'css/food/food_tag_list.css' %}">
+
+    <!-- Search-Box Styling -->
+    <link rel="stylesheet" href="{% static 'css/restaurantOwner/searchIcon.css' %}">
+    
+    <!-- Error Flash Message Styling -->
+    <link rel="stylesheet" href="{% static 'css/includes/flashMsg/flash_msg.css' %}">
+{% endblock %}
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <a href="{% url 'restOwnerApp:rowner_homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+        <h3>
+            Multi Vendor <br/>
+            Food Recommendation System
+        </h3>
+    </a>
+{% endblock %}
+
+
+
+<!-- Dedicated Searchfield Template Tags (Restaurant Owner) -->
+{% block search %} 
+    <div class="row container-fluid px-0 m-auto">
+        <div class="col-2"></div>
+        <div class="col px-0">
+            <input class="form-control form-control-dark w-100" 
+                    id="searchField" 
+                    type="text" 
+                    placeholder="Search" 
+                    aria-label="Search"
+                    style="
+                        /* border: 3px solid red; */
+                        border-radius: 3px 0 0 3px;
+                    ">
+        </div>
+        <div class="col-1 d-flex align-items-center justify-content-center"
+            id="searchIcon_holder">
+            <img src="{% static 'app_recources/search_icon.png' %}" 
+                alt="Search Icon" width="18" height="18">
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %}
+    <div class="container p-5">
+        <h1>RO: Food Tag List</h1>
+
+        <br/><br/><br/><br/>
+        
+        User Profile Bio: {{ u_profile.bio }}
+
+        <br/>
+
+        User ID: {{ user.id }}
+        
+        <br/><br/><br/><br/>
+
+        <center>
+            <div class="row">
+                <div class="col-md">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-2"></div>
+                            <div class="col-7 px-0">
+                                {{ form.tag_name }}
+                            </div>
+                            <div class="col d-flex align-items-center px-0"
+                                id="food_tag_add_btn_holder">
+                                <button type="submit" 
+                                    class="btn"
+                                    id="food_tag_add_btn">Add +</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Error Flash Msg -->
+            <div class="row"
+                style="margin-top: 2rem">
+                <div class="col"></div>
+                <div class="col-8 px-0">
+                    <!-- Flash Message -->
+                    {% include 'includes/flashMsg/flash_msg.html' %}
+                </div>
+                <div class="col"></div>
+            </div>
+        </center>
+
+        
+        <div id="tableDefualt" class="table-responsive px-5 m-4">
+            <table class="table table-striped table-hover mt-5">
+                <thead class="bg-dark text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th>Tag Name</th>
+                        <th>Date Created</th>
+                        <th>Remove Tags</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ft in food_tags %}
+                    <tr>
+                        <th scope="row"> {{forloop.counter }}  </th>
+                        <td> {{ ft.tag_name }} </td>
+                        <td> {{ ft.date_created }} </td>
+                        <td>
+                            <div class="col">
+                                <span>
+                                    <a href="{% url 'foodApp:food_foodTagRemove' ft.pk %}" 
+                                        onclick="return confirm('Remove the food tag?')"
+                                        class="btn btn-sm"
+                                        style="color: rgb(0, 0, 0); 
+                                            background-color: rgb(255, 167, 126);">Remove {{ ft.pk }}</a>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+    <!-- Error Flash Msg JS -->
+    <script src="{% static 'js/includes/flashMsg/flash_msg.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" href="{% static 'favicon.png' %}" type="image/png">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+
+    <!-- 
+        Fontawesome is installed in the pip of the project, "requriements.txt" is also updated.
+        No need to write CDN in the base_template about the font-awesome link.
+        Ref: https://fontawesome.com/v6.0/docs/web/use-with/python-django
+    -->
+
+    <!-- Fontawesome Setup -->
+    <script src="{% static 'fontawesomefree/js/all.min.js' %}"></script>
+    <link href="{% static 'fontawesomefree/css/all.min.css' %}" rel="stylesheet" type="text/css">
+
+
+    <!-- Custom Stylesheet -->
+    {% block stylesheet %} {% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- Header/ Nav-bar -->
+    <header class="navbar navbar-dark bg-dark px-3 p-4 d-flex justify-content-center">
+        <div class="row container-fluid">
+            <div class="col py-2">
+
+                <!-- AppLogo contains different url-path for the "restaurant_owner" & "restaurant_staff" homepage -->
+                {% block appLogo %} {% endblock %}
+
+                <!-- <span class="bg-secondary">
+                    <small>
+                        Restaurant Owner & Staff Base Template. <br/>
+                        This line is in the "foodsystem/templates/base_restaurant_staff.html" file.
+                    </small>
+                </span> -->
+            </div>
+            <div class="col d-flex justify-content-center text-white">
+                <h4 class="d-block text-center"
+                    style="font-weight: 800;">
+                    {{ user }}
+                    <!-- <span class="mt-4 bg-secondary d-flex justify-content-center align-items-center">Lorem, ipsum.</span> -->
+                    <span class="badge bg-info text-dark mt-4 d-flex justify-content-center align-items-center"
+                        style="padding: 0.8rem 0; width: 13rem; margin: 0 auto;">
+                        <!-- Staff -->
+                        {{ user_type }}
+                    </span>
+                </h4>
+            </div>
+            <div class="col py-4">
+                <!-- Dedicated Searchfield Template Tags (Restaurant Owner): Defined the searchField inside the both 
+                    "foodsystem/templates/restaurantOwner/homepage.html" & 
+                    "foodsystem/templates/restaurantOwner/homepage.html" files.
+                -->
+                {% block search %} {% endblock %}
+            </div>
+        </div>
+    </header>
+
+    <div class="container-fluid px-0">
+        
+        <!-- <div class="row d-flex flex-wrap"> -->
+        <div class="d-flex justify-content-start">
+
+
+            <!-- Navigation Sidebar Here -->
+            {% include 'includes/navbar/nav_sidebar_staff.html' %}
+
+
+            <!-- Main Body Content -->
+            {% block content %} 
+                <!-- For Modal Popups -->
+                {% block modal %} {% endblock %}
+            {% endblock %}
+
+
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark shadow footer text-center p-4 mt-auto">
+        <p class="text-white">Food Recommendation System by Tanjim Ashraf</p>
+    </footer>
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+
+    <!-- Custom JS -->
+    {% block js %} {% endblock %}
+</body>
+</html>

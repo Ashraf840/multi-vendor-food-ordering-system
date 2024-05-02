@@ -1,0 +1,92 @@
+.hr {
+    width: 100%;
+    height: 2px;
+    color: rgb(0, 0, 0);
+}
+
+#foodImg {
+    border-radius: 50%;
+    box-shadow: -1px 0px 30px 22px #7575756b;
+}
+
+hr.foodRatingHR {
+    border-top: 1px solid red;
+    border-radius: 5px;
+}
+
+
+
+/* -------------------------- */
+/* Ref:  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_js_rangeslider_pic */
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    border-radius: 5px;
+    background: #000000;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+.slider:hover {
+    opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgb(247, 65, 65);
+    background: url('https://us.123rf.com/450wm/fokaspokas/fokaspokas1612/fokaspokas161200099/69002470-star-icon-black-icon-on-transparent-background-.jpg?ver=6');
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 30px;
+    height: 30px;
+    border: 2px solid rgb(247, 65, 65);
+    background: url('https://us.123rf.com/450wm/fokaspokas/fokaspokas1612/fokaspokas161200099/69002470-star-icon-black-icon-on-transparent-background-.jpg?ver=6');
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+/* -------------------------- */
+
+.quantitySlider {
+    margin: 0 0 .5rem 0;
+}
+
+#quantityIndicatorNum {
+    margin: 1rem 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+
+#ratingNum {
+    margin: .4rem 0 0 0.8rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+#fa-heart-liked {
+    color: rgb(247, 65, 65);
+    transition: 0.01s linear;
+}
+#fa-heart-liked:hover {
+    color: rgb(160, 160, 160);
+}
+
+#fa-heart-unliked {
+    color: rgb(160, 160, 160);
+    transition: 0.01s linear;
+}
+#fa-heart-unliked:hover {
+    color: rgb(247, 65, 65);
+}

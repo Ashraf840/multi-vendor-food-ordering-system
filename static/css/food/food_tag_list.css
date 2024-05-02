@@ -1,0 +1,26 @@
+/* ----------------------------------------------------------------------------- */
+/* Food Tag Input-Field ID is created (modified) inside the "foodsystem\food\forms.py" */
+/* Change the placeholder font-color */
+#tag-name-update::placeholder{
+    color: rgb(192, 192, 192);
+}
+
+#tag-name-update::placeholder { /* Microsoft Edge */
+    color: rgb(192, 192, 192);
+}
+
+#food_tag_add_btn_holder{
+    text-align: left;
+}
+
+#food_tag_add_btn{
+    padding: 12.7px 20px;
+    font-weight: bold;
+    border-radius: 0 5px 5px 0;
+    background-color: rgb(226, 123, 123);
+}
+
+#food_tag_add_btn:hover {
+    background-color: rgb(209, 110, 110);
+}
+/* ----------------------------------------------------------------------------- */

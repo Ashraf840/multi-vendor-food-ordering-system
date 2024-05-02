@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+{% load static %}
+
+
+
+<!-- 
+Took the template from:  https://dev.to/codeply/bootstrap-5-sidebar-examples-38pb
+Source Code (Codeply - Online Editor):  https://www.codeply.com/p/WGCqYEiPBg
+
+
+Fontawesome is installed in the pip of the project, "requriements.txt" is also updated.
+No need to write CDN in the base_template about the font-awesome link.
+-->
+
+<!-- Load css file for this navbar -->
+<link href="{% static 'css/includes/navbar/nav_sidebar_ronwer.css' %}" rel="stylesheet" type="text/css">
+
+
+
+<!-- Side Nav -->
+<div class="col-auto col-md-3 col-xl-2 px-0 bg-dark"
+    style="max-width:15%"
+    id="side_nav">
+
+
+
+    <div class="d-flex flex-column align-items-center align-items-sm-start pt-2 text-dark min-vh-100">
+        
+        
+        
+        
+        <!-- <a href="#" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-danger text-decoration-none ms-5">
+            <span class="fs-5 d-none d-sm-inline">Menu</span>
+        </a> -->
+        
+
+        <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start container-fluid px-0" 
+            id="menu">
+
+            <!-- <hr> -->
+
+            <div style="text-align: center;"
+                class="container-fluid">
+                <div class="dropdown"
+                    style="display: inline-block;">
+                    <a href="#" 
+                        class="text-white text-decoration-none" 
+                        id="dropdownUser1" 
+                        data-bs-toggle="dropdown" 
+                        aria-expanded="false"
+                        style="height: 5rem;">
+
+                        <!-- Has a helper func inside the "UserProfile" model, which gets the user-dp or a default-dp -->
+                        <img src="{{ u_profile.get_photo_url }}" 
+                            alt="DP" 
+                            width="80%" 
+                            height="80%" 
+                            class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-light text-small shadow mt-5" 
+                        aria-labelledby="dropdownUser1">
+                        <li><a class="dropdown-item" href="#">{{ user.profile_pic }}</a></li>
+                        <li><a class="dropdown-item" href="#">Settings</a></li>
+                        <!-- <li><a class="dropdown-item" href="#">Profile</a></li> -->
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li>
+                            <a class="dropdown-item" 
+                                href="{% url 'userAuth:logout' %}">Sign out</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- <hr> -->
+
+
+            <!-- DASHBOARD -->
+            <li class="nav-item container-fluid px-0 mt-5"
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="{% url 'restStaffApp:rstaff_homepage' %}" 
+                    class="nav-link align-middle text-dark container-fluid text-start px-4" 
+                    style="padding: 0.5rem 2rem;"
+                    id="side_nav_item">
+                    <!-- <i class="fas fa-home fa-lg text-danger"></i>  -->
+                    <i class="fa-solid fa-house fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Dashboard</span>
+                </a>
+            </li>
+            
+
+
+            <!-- Order & Invoice (including sub-item) -->
+            <li class="container-fluid px-0" 
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="#submenu1" 
+                    data-bs-toggle="collapse" 
+                    style="padding: 0.5rem 2rem;"
+                    class="nav-link align-middle text-dark text-start px-4"
+                    id="side_nav_item">
+                    <i class="fa-solid fa-bell-concierge fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Order</span> 
+                </a>
+                <ul class="collapse hide nav flex-column px-0 mt-2 bg-light" 
+                    id="submenu1" 
+                    data-bs-parent="#menu">
+                    <li class="container-fluid px-0 py-1">
+                        <a href="{% url 'restStaffApp:orderList_staff_view' %}" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Order
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Pending
+                            <!-- <span class="d-none d-sm-inline text-danger">
+                                <small class="fw-bold">notif</small>
+                            </span>  -->
+                        </a>
+                    </li>
+                    <!-- <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Cancelled
+                            <span class="d-none d-sm-inline text-danger">
+                                <small class="fw-bold">notif</small>
+                            </span> 
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Invoice
+                        </a>
+                    </li> -->
+                </ul>
+            </li>
+
+
+
+
+            <!-- Food (including sub-item) -->
+            <li class="container-fluid px-0" 
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="#submenu2" 
+                    data-bs-toggle="collapse" 
+                    style="padding: 0.5rem 2rem;"
+                    class="nav-link align-middle text-dark text-start px-4"
+                    id="side_nav_item">
+                    <i class="fas fa-hamburger fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Food</span> 
+                </a>
+                <!-- <ul class="collapse hide nav flex-column px-0 mt-2 bg-light" 
+                    id="submenu2" 
+                    data-bs-parent="#menu">
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link px-0 text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; All Food
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link px-0 text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Newly Added
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link px-0 text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Top Rated
+                        </a>
+                    </li>
+                    {% if user.is_restaurant_owner %}
+                    <li class="container-fluid px-0 py-1">
+                        <a href="{% url 'foodApp:food_foodTagList' %}" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link px-0 text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Food Tag Name
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul> -->
+            </li>
+
+
+
+
+
+
+            <!-- Category (including sub-item) -->
+            <!-- <li class="container-fluid px-0" 
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="#submenu3" 
+                    data-bs-toggle="collapse" 
+                    style="padding: 0.5rem 2rem;"
+                    class="nav-link align-middle text-dark text-start px-4"
+                    id="side_nav_item">
+                    <i class="fas fa-th-list fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Category</span> 
+                </a>
+                <ul class="collapse hide nav flex-column px-0 mt-2 bg-light" 
+                    id="submenu3" 
+                    data-bs-parent="#menu">
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; View Category
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Add Category
+                        </a>
+                    </li>
+                </ul>
+            </li> -->
+
+
+
+
+
+
+
+            <!-- Combo Meal (including sub-item) -->
+            <!-- <li class="container-fluid px-0" 
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="#submenu4" 
+                    data-bs-toggle="collapse" 
+                    style="padding: 0.5rem 2rem;"
+                    class="nav-link align-middle text-dark text-start px-4"
+                    id="side_nav_item">
+                    <i class="fa-solid fa-stroopwafel fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Combo</span> 
+                </a>
+                <ul class="collapse hide nav flex-column px-0 mt-2 bg-light" 
+                    id="submenu4" 
+                    data-bs-parent="#menu">
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; View Combo Meal
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Add Combo Meal
+                        </a>
+                    </li>
+                </ul>
+            </li> -->
+
+
+
+
+            <!-- Promo Codes & Reward Points -->
+            <!-- <li class="container-fluid px-0" 
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="#submenu5" 
+                    data-bs-toggle="collapse" 
+                    style="padding: 0.5rem 2rem;"
+                    class="nav-link align-middle text-dark text-start px-4"
+                    id="side_nav_item">
+                    <i class="fa-solid fa-hand-holding-dollar fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Promo</span> 
+                </a>
+                <ul class="collapse hide nav flex-column px-0 mt-2 bg-light" 
+                    id="submenu5" 
+                    data-bs-parent="#menu">
+                    <li class="container-fluid px-0 py-1">
+                        <a href="{% url 'restOwnerApp:rowner_promo_code_list' %}" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Promo Code
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Reward Point
+                        </a>
+                    </li>
+                </ul>
+            </li> -->
+
+
+
+
+
+
+
+
+            <!-- Staff Management (including sub-item) -->
+            <!-- <li class="container-fluid px-0" 
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="#submenu6" 
+                    data-bs-toggle="collapse" 
+                    style="padding: 0.5rem 2rem;"
+                    class="nav-link align-middle text-dark text-start px-4"
+                    id="side_nav_item">
+                    <i class="fa-solid fa-user-tie fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Staff</span> 
+                </a>
+                <ul class="collapse hide nav flex-column px-0 mt-2 bg-light" 
+                    id="submenu6" 
+                    data-bs-parent="#menu">
+                    <li class="container-fluid px-0 py-1">
+                        <a href="{% url 'restaurantOwnerApplication:rowner_staff_list' %}" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Staff List
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="{% url 'restaurantOwnerApplication:rowner_pending_staff_list' %}" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link px-0 text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Pending Staff
+                        </a>
+                    </li>
+                </ul>
+            </li> -->
+
+
+
+
+
+            <!-- Statistics (including sub-item) -->
+            <!-- <li class="container-fluid px-0" 
+                style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;">
+                <a href="#submenu7" 
+                    data-bs-toggle="collapse" 
+                    style="padding: 0.5rem 2rem;"
+                    class="nav-link align-middle text-dark text-start px-4"
+                    id="side_nav_item">
+                    <i class="fa-solid fa-chart-line fa-lg text-white"></i>
+                    <span class="ms-3 d-none d-sm-inline text-white">Statistics</span> 
+                </a>
+                <ul class="collapse hide nav flex-column px-0 mt-2 bg-light" 
+                    id="submenu7" 
+                    data-bs-parent="#menu">
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; Food Stats
+                        </a>
+                    </li>
+                    <li class="container-fluid px-0 py-1">
+                        <a href="#" 
+                            style="border-radius: 0 10px 10px 0; padding: 0.5rem 2rem;"
+                            class="nav-link text-dark text-start px-5"
+                            id="side_nav_subitem"> 
+                            &#10148; User's Wishlist
+                        </a>
+                    </li>
+                </ul>
+            </li> -->
+    
+        </ul>
+    </div>
+</div>

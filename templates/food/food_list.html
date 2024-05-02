@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<!-- Using/ extending the "foodsystem/templates/base_restaurant_owner.html" file as a base-template -->
+
+
+
+{% extends 'base_restaurant_owner.html' %}
+{% load static %}
+
+
+
+
+<!-- Custom Stylesheet -->
+{% block stylesheet %} 
+    <!-- Page Styling -->
+    <link rel="stylesheet" href="#">
+
+    <!-- Search-Box Styling -->
+    <link rel="stylesheet" href="{% static 'css/restaurantOwner/searchIcon.css' %}">
+    
+    <!-- Error Flash Message Styling -->
+    <link rel="stylesheet" href="{% static 'css/includes/flashMsg/flash_msg.css' %}">
+{% endblock %}
+
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <a href="{% url 'restOwnerApp:rowner_homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+        <h3>
+            Multi Vendor <br/>
+            Food Recommendation System
+        </h3>
+    </a>
+{% endblock %}
+
+
+
+<!-- Dedicated Searchfield Template Tags (Restaurant Owner) -->
+{% block search %} 
+    <div class="row container-fluid px-0 m-auto">
+        <div class="col-2"></div>
+        <div class="col px-0">
+            <input class="form-control form-control-dark w-100" 
+                    id="searchField" 
+                    type="text" 
+                    placeholder="Search" 
+                    aria-label="Search"
+                    style="
+                        /* border: 3px solid red; */
+                        border-radius: 3px 0 0 3px;
+                    ">
+        </div>
+        <div class="col-1 d-flex align-items-center justify-content-center"
+            id="searchIcon_holder">
+            <img src="{% static 'app_recources/search_icon.png' %}" 
+                alt="Search Icon" width="18" height="18">
+        </div>
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %}
+    <!-- giving a container-fluid, cause the food table has more column then others & require more width -->
+    <div class="container-fluid p-5">
+        <h1>RO: Food List</h1>
+
+        <br/><br/><br/><br/>
+        
+        User Profile Bio: {{ u_profile.bio }}
+
+        <br/>
+
+        User ID: {{ user.id }}
+        
+        <br/><br/><br/><br/>
+
+        <div class="row">
+            <!-- Add new food -->
+            <div class="col">
+                <a href="{% url 'foodApp:food_createFood' %}" 
+                    class="btn btn-sm"
+                    style="color: rgb(0, 0, 0); 
+                        background-color: rgb(255, 167, 126);">Add New Food+</a>
+            </div>
+
+            <!-- Recently Added Food (food added within a month) -->
+            <div class="col">
+                <a href="{% url 'foodApp:food_foodList_recentlyadded' %}" 
+                    class="btn btn-sm"
+                    style="color: rgb(0, 0, 0); 
+                        background-color: rgb(255, 246, 126);">Recently Added</a>
+            </div>
+        </div>
+
+
+
+        <center>
+            <!-- Flash Msg -->
+            <div class="row"
+                style="margin-top: 2rem">
+                <div class="col"></div>
+                <div class="col-8 px-0">
+                    <!-- Flash Message -->
+                    {% include 'includes/flashMsg/flash_msg.html' %}
+                </div>
+                <div class="col"></div>
+            </div>
+        </center>
+
+
+        
+        <div id="tableDefualt" class="table-responsive px-0 m-4">
+            <table class="table table-striped table-hover mt-5">
+                <thead class="bg-dark text-white">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th>Food</th>
+                        <th>Category</th>
+                        <th>Reward Point</th>
+                        <th>Price</th>
+                        <th>Food Code</th>
+                        <th>Status</th>
+                        <th>Total Viewed</th>
+                        <th>Date Created</th>
+                        <th>Last Updated</th>
+                        <th>Detail</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in food %}
+                    <tr>
+                        <th scope="row"> {{forloop.counter }} </th>
+                        <td class="fs-3"> {{ f.food_name }} </td>
+                        <td> {{ f.category }} </td>
+                        <td> {{ f.reward_point }} </td>
+                        <td> {{ f.price }} </td>
+                        <td> {{ f.food_code }} </td>
+                        {% if f.is_available %}
+                        <td> Available </td>
+                        {% else %}
+                        <td class="bg-danger"> Out of stock </td>
+                        {% endif %}
+                        <td class="fw-bold text-center"> 
+                            {{ f.total_viewed }} 
+                        </td>
+                        <td> {{ f.created_at }} </td>
+                        <td> {{ f.last_updated_at }} </td>
+                        <td>
+                            <div class="col">
+                                <span>
+                                    <a href="{% url 'foodApp:food_udpateFoodDetail' f.pk %}" 
+                                        class="btn btn-sm"
+                                        style="color: rgb(0, 0, 0); 
+                                            background-color: rgb(222, 255, 102);">Detail {{ f.pk }} </a>
+                                </span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="col">
+                                <span>
+                                    <a href="{% url 'foodApp:food_removeFoodRecord' f.pk %}" 
+                                        onclick="return confirm('Remove the food from database?')"
+                                        class="btn btn-sm"
+                                        style="color: rgb(0, 0, 0); 
+                                            background-color: rgb(255, 167, 126);">Remove {{ f.pk }} </a>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+{% endblock %}
+
+
+
+
+<!-- Custom JS -->
+{% block js %} 
+    <!-- Error Flash Msg JS -->
+    <script src="{% static 'js/includes/flashMsg/flash_msg.js' %}"></script>
+{% endblock %}

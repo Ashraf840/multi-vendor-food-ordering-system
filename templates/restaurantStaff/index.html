@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+{% extends 'base_restaurant_staff.html' %}
+{% load static %}
+
+
+
+<!-- Application Logo/ Title -->
+{% block appLogo %} 
+    <a href="{% url 'restStaffApp:rstaff_homepage' %}" class="text-white" style="min-width: 7rem; text-decoration: none;">
+        <h3> Food Recommendation System </h3>
+    </a>
+{% endblock %}
+
+
+
+
+<!-- Main Body Content -->
+{% block content %} 
+    <div class="container py-5 px-1"
+        style="background-color: rgba(255, 255, 255, 0.76);">
+        <h1>Homepage: Restaurant Staff</h1>
+
+        <!-- <br/><br/><br/><br/>
+        
+        User Profile Bio: {{ u_profile.bio }}
+
+        <br/>
+
+        User ID: {{ user.id }}
+         -->
+        <br/><br/><br/><br/>
+        
+        <!-- Has a helper func inside the "UserProfile" model, which gets the user-dp or a default-dp -->
+        <!-- <img src="{{ u_profile.get_photo_url }}" alt="User Profile DP (Original)" width="500" height="600"> -->
+
+    </div>
+
+{% endblock %}
